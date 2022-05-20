@@ -1,10 +1,10 @@
 <script setup lang="ts">
 const props = defineProps<{
-  value: string | null
+  value: string | null | undefined
 }>()
 const emit = defineEmits<{
   (e: 'clear'): void
-  (e: 'confirm', filter: string | null): void
+  (e: 'confirm', filter: string | null | undefined): void
 }>()
 
 const dataTableInjectionKey = 'n-data-table'
@@ -16,19 +16,28 @@ const {
 
 const filterValue = $ref(props.value)
 const propsValue = computed(() => filterValue === '' ? null : filterValue)
+
+const input = $ref<HTMLInputElement | null>(null)
+onMounted(() => input!.focus())
+
+function onConfirm() {
+  emit('confirm', filterValue === '' ? null : filterValue)
+}
 </script>
 
 <template>
   <div :class="`${clsPrefix}-data-table-filter-menu`" :style="filterMenuCssVars">
-    <div class="p-2">
-      <n-input :value="propsValue" @input="(v) => filterValue = v" />
-    </div>
+    <form @submit.prevent="onConfirm">
+      <div class="p-2">
+        <n-input ref="input" :value="propsValue" @input="(v) => filterValue = v" />
+      </div>
+    </form>
 
     <div :class="`${clsPrefix}-data-table-filter-menu__action`">
       <n-button @click="emit('clear')">
         {{ locale.clear }}
       </n-button>
-      <n-button @click="emit('confirm', filterValue)">
+      <n-button @click="onConfirm">
         {{ locale.confirm }}
       </n-button>
     </div>
