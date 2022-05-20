@@ -1,10 +1,10 @@
 <script setup lang="ts">
 /* eslint-disable no-console */
-import type { DataTableBaseColumn, DataTableColumns, DataTableFilterState } from 'naive-ui'
+import type { DataTableBaseColumn, DataTableFilterState, PaginationProps } from 'naive-ui'
 import type { WorkerHttpvfs } from 'sql.js-httpvfs'
-import type { FilterOptionValue } from 'naive-ui/es/data-table/src/interface'
 import { useDbWorkerStore } from '~/stores/db'
-import StringFilterMenu from '~/components/StringFilterMenu.vue'
+import type { AppTableColumns, FiltersRef, PaginationRef } from '~/composables'
+import { AppTableFilterType, useDataTable } from '~/composables'
 
 const { t } = useI18n()
 
@@ -79,30 +79,89 @@ const workerStore = useDbWorkerStore()
 
 let loading = $ref(true)
 let units = $ref<Unit[]>([])
-const pagination = reactive({
+
+const columnOptions: AppTableColumns = [
+  { title: 'Rank', key: 'rank_display' },
+  {
+    title: '名稱',
+    key: 'name1',
+    width: 300,
+    ellipsis: {
+      tooltip: true,
+    },
+    filterType: AppTableFilterType.STRING,
+  },
+  { title: t('R後?'), key: 'is_inverse_display', align: 'center' },
+  { title: t('MA?'), key: 'is_ma_display', align: 'center' },
+  { title: t('距離'), key: 'range_display', align: 'center' },
+  { title: t('血'), key: 'hp', align: 'right', filterType: AppTableFilterType.NUMBER },
+  { title: t('索敵'), key: 'search_distance', align: 'right', filterType: AppTableFilterType.NUMBER },
+  { title: t('攻'), key: 'attack', align: 'right', filterType: AppTableFilterType.NUMBER },
+  { title: t('防'), key: 'defense', align: 'right', filterType: AppTableFilterType.NUMBER },
+  { title: t('速'), key: 'speed', align: 'right', filterType: AppTableFilterType.NUMBER },
+  { title: t('敏'), key: 'agility', align: 'right', filterType: AppTableFilterType.NUMBER },
+  { title: t('氣槽'), key: 'boost', align: 'right', filterType: AppTableFilterType.NUMBER },
+  {
+    title: t('盾'),
+    key: 'shield_group',
+    align: 'center',
+    children: [
+      { title: t('盾'), key: 'shield_display', align: 'right', filterType: AppTableFilterType.NUMBER },
+      { title: t('%'), key: 'shield_percent_display', align: 'right', filterType: AppTableFilterType.NUMBER },
+      { title: t('類型'), key: 'shield_type_display', align: 'right' },
+      { title: t('1武'), key: 'shield_dir_w1_display', align: 'center' },
+      { title: t('2武'), key: 'shield_dir_w2_display', align: 'center' },
+      { title: t('3武'), key: 'shield_dir_w3_display', align: 'center' },
+      { title: t('4武'), key: 'shield_dir_w4_display', align: 'center' },
+      { title: t('5武'), key: 'shield_dir_w5_display', align: 'center' },
+    ],
+  },
+]
+
+const paginationOptions: PaginationProps = {
   itemCount: 0,
   page: 1,
   pageSize: 20,
   pageSizes: [10, 20, 50],
   showSizePicker: true,
   pageSlot: 5,
-  onChange: async (page: number) => {
-    pagination.page = page
-    await fetchData(workerStore.worker!)
-  },
-  onUpdatePageSize: async (pageSize: number) => {
-    pagination.pageSize = pageSize
-    pagination.page = 1
-    await fetchData(workerStore.worker!)
+}
+
+const { filters, pagination, columns } = useDataTable({
+  columnOptions,
+  paginationOptions,
+  fetchFn: async (filters: FiltersRef, pagination: PaginationRef): Promise<void> => {
+    await fetchData(workerStore.worker!, filters, pagination)
   },
 })
-let filters = $ref<Record<string, { operator: string; value: string | number } | undefined>>({})
-async function fetchData(worker: WorkerHttpvfs) {
+
+// const pagination = reactive({
+//   itemCount: 0,
+//   page: 1,
+//   pageSize: 20,
+//   pageSizes: [10, 20, 50],
+//   showSizePicker: true,
+//   pageSlot: 5,
+//   onChange: async (page: number) => {
+//     pagination.page = page
+//     await fetchData(workerStore.worker!)
+//   },
+//   onUpdatePageSize: async (pageSize: number) => {
+//     pagination.pageSize = pageSize
+//     pagination.page = 1
+//     await fetchData(workerStore.worker!)
+//   },
+// })
+// let filters = $ref<Record<string, { operator: string; value: string | number } | undefined>>({})
+async function fetchData(worker: WorkerHttpvfs, filters: FiltersRef, pagination: PaginationRef) {
   loading = true
 
-  const wheres = Object.entries(filters)
+  const wheres = Object.entries(filters.value)
     .filter(([_, v]) => !!v)
-    .map(([field, { operator, value }]) => `${field} ${operator} ${value}`)
+    .map(([field, v]) => {
+      const { operator, value } = v!
+      return `${field} ${operator} ${value}`
+    })
 
   let where = ''
   if (wheres.length)
@@ -112,7 +171,7 @@ async function fetchData(worker: WorkerHttpvfs) {
   units = (await worker!.db.query(`
   select * from units
   ${where}
-  limit ${pageSize} offset ${pageSize * (page - 1)}`) as Partial<Unit>[])
+  limit ${pageSize} offset ${pageSize! * (page! - 1)}`) as Partial<Unit>[])
     .map(record => new Unit(record))
 
   const { count } = (await worker!.db.query(`
@@ -125,89 +184,95 @@ workerStore.$subscribe(async (_, { w }) => {
   if (w === null)
     return
 
-  await fetchData(w)
+  await fetchData(w, filters, pagination)
 })
 onMounted(async () => {
   if (workerStore.worker === null || units.length > 0)
     return
 
-  await fetchData(workerStore.worker)
-})
-watch(() => filters, async () => {
-  pagination.page = 1
-  await fetchData(workerStore.worker!)
-  console.log('filters changed, fetched')
+  await fetchData(workerStore.worker, filters, pagination)
 })
 
-const dataTable = $ref(null)
+// watch(() => filters, async () => {
+//   pagination.page = 1
+//   await fetchData(workerStore.worker!)
+//   console.log('filters changed, fetched')
+// })
 
-function createNameColumn(): DataTableBaseColumn {
-  return {
-    title: '名稱',
-    key: 'name1',
-    width: 300,
-    ellipsis: {
-      tooltip: true,
-    },
-    filter: true,
-    filterOptionValue: null,
-    renderFilterMenu: undefined,
-  }
-}
+// function createNameColumn(): DataTableBaseColumn {
+//   return {
+//     title: '名稱',
+//     key: 'name1',
+//     width: 300,
+//     ellipsis: {
+//       tooltip: true,
+//     },
+//     filter: true,
+//     filterOptionValue: null,
+//     renderFilterMenu: undefined,
+//   }
+// }
 
-const nameColumn = reactive<DataTableBaseColumn>(createNameColumn())
-nameColumn.renderFilterMenu = ({ hide }) => {
-  return h(StringFilterMenu, {
-    value: nameColumn.filterOptionValue,
-    onClear: () => {
-      nameColumn.filterOptionValue = null
-      filters = {
-        ...filters,
-        [nameColumn.key]: undefined,
-      }
-      hide()
-    },
-    onConfirm: (v: FilterOptionValue | null | undefined) => {
-      nameColumn.filterOptionValue = v
-      filters = {
-        ...filters,
-        [nameColumn.key]: v ? { operator: 'LIKE', value: `"%${v}%"` } : undefined,
-      }
-      hide()
-    },
-  })
-}
+// const nameColumn = reactive<DataTableBaseColumn>(createNameColumn())
+// nameColumn.renderFilterMenu = ({ hide }) => {
+//   return h(StringFilterMenu, {
+//     value: nameColumn.filterOptionValue,
+//     onClear: () => {
+//       nameColumn.filterOptionValue = null
+//       filters = {
+//         ...filters,
+//         [nameColumn.key]: undefined,
+//       }
+//       hide()
+//     },
+//     onConfirm: (v: FilterOptionValue | null | undefined) => {
+//       nameColumn.filterOptionValue = v
+//       filters = {
+//         ...filters,
+//         [nameColumn.key]: v ? { operator: 'LIKE', value: `"%${v}%"` } : undefined,
+//       }
+//       hide()
+//     },
+//   })
+// }
 
-const columns = reactive<DataTableColumns>([
-  { title: 'Rank', key: 'rank_display' },
-  nameColumn,
-  { title: t('R後?'), key: 'is_inverse_display', align: 'center' },
-  { title: t('MA?'), key: 'is_ma_display', align: 'center' },
-  { title: t('距離'), key: 'range_display', align: 'center' },
-  { title: t('血'), key: 'hp', align: 'right' },
-  { title: t('索敵'), key: 'search_distance', align: 'right' },
-  { title: t('攻'), key: 'attack', align: 'right' },
-  { title: t('防'), key: 'defense', align: 'right' },
-  { title: t('速'), key: 'speed', align: 'right' },
-  { title: t('敏'), key: 'agility', align: 'right' },
-  { title: t('氣槽'), key: 'boost', align: 'right' },
-  {
-    title: t('盾'),
-    key: 'shield_group',
-    align: 'center',
-    children: [
+// const columns = reactive<DataTableColumns>([
+//   { title: 'Rank', key: 'rank_display' },
+//   nameColumn,
+//   {
+//     title: t('R後?'),
+//     key: 'is_inverse_display',
+//     align: 'center',
+//     filter: true,
+//     defaultFilterOptionValues: [],
+//     filterOptions: [{ label: 'R前', value: 0 }, { label: 'R後', value: 1 }],
+//   },
+//   { title: t('MA?'), key: 'is_ma_display', align: 'center' },
+//   { title: t('距離'), key: 'range_display', align: 'center' },
+//   { title: t('血'), key: 'hp', align: 'right' },
+//   { title: t('索敵'), key: 'search_distance', align: 'right' },
+//   { title: t('攻'), key: 'attack', align: 'right' },
+//   { title: t('防'), key: 'defense', align: 'right' },
+//   { title: t('速'), key: 'speed', align: 'right' },
+//   { title: t('敏'), key: 'agility', align: 'right' },
+//   { title: t('氣槽'), key: 'boost', align: 'right' },
+//   {
+//     title: t('盾'),
+//     key: 'shield_group',
+//     align: 'center',
+//     children: [
 
-      { title: t('盾'), key: 'shield_display', align: 'right' },
-      { title: t('%'), key: 'shield_percent_display', align: 'right' },
-      { title: t('類型'), key: 'shield_type_display', align: 'right' },
-      { title: t('1武'), key: 'shield_dir_w1_display', align: 'center' },
-      { title: t('2武'), key: 'shield_dir_w2_display', align: 'center' },
-      { title: t('3武'), key: 'shield_dir_w3_display', align: 'center' },
-      { title: t('4武'), key: 'shield_dir_w4_display', align: 'center' },
-      { title: t('5武'), key: 'shield_dir_w5_display', align: 'center' },
-    ],
-  },
-])
+//       { title: t('盾'), key: 'shield_display', align: 'right' },
+//       { title: t('%'), key: 'shield_percent_display', align: 'right' },
+//       { title: t('類型'), key: 'shield_type_display', align: 'right' },
+//       { title: t('1武'), key: 'shield_dir_w1_display', align: 'center' },
+//       { title: t('2武'), key: 'shield_dir_w2_display', align: 'center' },
+//       { title: t('3武'), key: 'shield_dir_w3_display', align: 'center' },
+//       { title: t('4武'), key: 'shield_dir_w4_display', align: 'center' },
+//       { title: t('5武'), key: 'shield_dir_w5_display', align: 'center' },
+//     ],
+//   },
+// ])
 
 function onFiltersChange(filters: DataTableFilterState, column: DataTableBaseColumn) {
   console.log('filters changed', filters, column)
@@ -216,12 +281,12 @@ function onFiltersChange(filters: DataTableFilterState, column: DataTableBaseCol
 
 <template>
   <n-data-table
-    ref="dataTable"
     remote
     :loading="loading"
     :columns="columns"
     :data="units"
     :pagination="pagination"
+    pagination-behavior-on-filter="first"
     :theme-overrides="{
       tdPaddingMedium: '4px',
       tdPaddingLarge: '4px',
