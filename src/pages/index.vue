@@ -131,9 +131,7 @@ const paginationOptions: PaginationProps = {
 const { filters, sort, pagination, columns } = useDataTable({
   columnOptions,
   paginationOptions,
-  fetchFn: async (filters: FiltersRef, pagination: PaginationRef, sort: SortRef): Promise<void> => {
-    await fetchData(filters, pagination, sort)
-  },
+  fetchFn: fetchData,
 })
 
 async function fetchData(filters: FiltersRef, pagination: PaginationRef, sort: SortRef) {
