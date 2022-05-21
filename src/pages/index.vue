@@ -1,6 +1,7 @@
 <script setup lang="ts">
 /* eslint-disable no-console */
 import type { DataTableBaseColumn, DataTableFilterState, DataTableSortState, PaginationProps } from 'naive-ui'
+import { NImage } from 'naive-ui'
 import { useDbWorkerStore } from '~/stores/db'
 import type { AppTableColumns, FiltersRef, PaginationRef, SortRef } from '~/composables'
 import { AppTableFilterType, useDataTable } from '~/composables'
@@ -81,6 +82,11 @@ let units = $ref<Unit[]>([])
 
 const columnOptions: AppTableColumns = [
   { title: t('Rank'), key: 'rank', displayKey: 'rank_display' },
+  {
+    key: 'image',
+    render: row => h(NImage, { src: `/sdgo-data/sgnoodles/units/${row.id}-1.png`, width: 50 }),
+    sorter: false,
+  },
   {
     title: t('名稱'),
     key: 'name1',

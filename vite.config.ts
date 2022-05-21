@@ -18,7 +18,7 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 const markdownWrapperClasses = 'prose prose-sm m-auto text-left'
 
 export default defineConfig({
-  base: 'sdgo-data',
+  base: '/sdgo-data',
 
   resolve: {
     alias: {
