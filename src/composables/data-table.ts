@@ -73,7 +73,7 @@ export function useDataTable<T = InternalRowData>({
   fetchFn,
 }: UseDataTableOptions<T>) {
   const filters = ref<Filters>({})
-  const sort = ref<DataTableSortState>()
+  const sort = ref<Array<DataTableSortState>>()
   const pagination = createPagination(paginationOptions, filters, sort, fetchFn)
 
   const columns = reactive<AppTableColumns<T>>(

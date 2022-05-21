@@ -80,9 +80,9 @@ let loading = $ref(true)
 let units = $ref<Unit[]>([])
 
 const columnOptions: AppTableColumns = [
-  { title: 'Rank', key: 'rank', displayKey: 'rank_display' },
+  { title: t('Rank'), key: 'rank', displayKey: 'rank_display' },
   {
-    title: '名稱',
+    title: t('名稱'),
     key: 'name1',
     width: 300,
     ellipsis: {
@@ -163,11 +163,12 @@ async function fetchData(filters: FiltersRef, pagination: PaginationRef, sort: S
   }
 
   const { pageSize, page } = pagination
-  units = (await worker!.db.query(`
+  const sql = `
   select * from units
   ${where}
   ${orderBy}
-  limit ${pageSize} offset ${pageSize! * (page! - 1)}`) as Partial<Unit>[])
+  limit ${pageSize} offset ${pageSize! * (page! - 1)}`
+  units = (await worker!.db.query(sql) as Partial<Unit>[])
     .map(record => new Unit(record))
 
   const { count } = (await worker!.db.query(`
@@ -189,14 +190,22 @@ function onFiltersChange(filters: DataTableFilterState, column: DataTableBaseCol
 }
 
 function onSortersChange(sortState: DataTableSortState) {
-  if (sortState.order === false) {
+  const { columnKey, order } = sortState
+
+  if (order === false) {
     sort.value = []
   }
   else {
-    if (sortState.columnKey === 'rank') {
+    if (columnKey === 'rank') {
       sort.value = [
-        { columnKey: 'rank', order: sortState.order },
-        { columnKey: 'rank_suf', order: sortState.order },
+        { columnKey: 'rank', order, sorter: true },
+        { columnKey: 'rank_suf', order, sorter: true },
+      ]
+    }
+    else if (columnKey === 'shield_percent' || columnKey === 'shield_type') {
+      sort.value = [
+        sortState,
+        { columnKey: 'shield', order, sorter: true },
       ]
     }
     else {
