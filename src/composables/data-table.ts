@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import type { DataTableBaseColumn, EllipsisProps, PaginationProps } from 'naive-ui'
+import type { DataTableBaseColumn, DataTableSortState, EllipsisProps, PaginationProps } from 'naive-ui'
 import type { HTMLAttributes, Ref, UnwrapNestedRefs, UnwrapRef, VNodeChild } from 'vue'
 import type { TableBaseColumn, TableExpandColumn, TableSelectionColumn } from 'naive-ui/es/data-table/src/interface'
 import StringFilterMenu from '~/components/StringFilterMenu.vue'
@@ -59,7 +59,8 @@ export declare interface Filter {
 export declare type Filters = Record<string, Filter | undefined>
 export declare type FiltersRef = Ref<UnwrapRef<Filters>>
 export declare type PaginationRef = UnwrapNestedRefs<Writeable<PaginationProps>>
-export declare type FetchFn = (filters: FiltersRef, pagination: PaginationRef) => Promise<void>
+export declare type SortRef = Ref<UnwrapRef<DataTableSortState | undefined>>
+export declare type FetchFn = (filters: FiltersRef, pagination: PaginationRef, sort: SortRef) => Promise<void>
 
 export declare interface UseDataTableOptions<T = InternalRowData> {
   columnOptions: AppTableColumns<T>
@@ -72,7 +73,8 @@ export function useDataTable<T = InternalRowData>({
   fetchFn,
 }: UseDataTableOptions<T>) {
   const filters = ref<Filters>({})
-  const pagination = createPagination(paginationOptions, filters, fetchFn)
+  const sort = ref<DataTableSortState>()
+  const pagination = createPagination(paginationOptions, filters, sort, fetchFn)
 
   const columns = reactive<AppTableColumns<T>>(
     columnOptions.map(option => createColumn<T>(option, filters)),
@@ -81,11 +83,12 @@ export function useDataTable<T = InternalRowData>({
   // on filters changed, fetch data
   watch(filters, async () => {
     console.log('filters changed, fetch now')
-    await fetchFn(filters, pagination)
+    await fetchFn(filters, pagination, sort)
   })
 
   return {
     filters,
+    sort,
     pagination,
     columns,
   }
@@ -98,6 +101,15 @@ function createColumn<T>(opt: AppTableColumn<T>, filters: FiltersRef) {
     options.filterOptionValue = null
     options.renderFilterMenu = undefined
   }
+
+  if (options.sorter === undefined && options.children === undefined)
+    options.sorter = true
+
+  if (options.children && Array.isArray(options.children))
+    options.children = options.children.map(opt => createColumn(opt, filters))
+
+  if (options.render === undefined && options.displayKey)
+    options.render = row => row[options.displayKey]
 
   const reactiveColumn = reactive<AppTableColumn<T>>(options)
 
@@ -177,17 +189,17 @@ function setFilter(filters: FiltersRef, key: ColumnKey, value?: Filter) {
   }
 }
 
-function createPagination(options: Writeable<PaginationProps>, filters: FiltersRef, fetchFn: FetchFn): PaginationRef {
+function createPagination(options: Writeable<PaginationProps>, filters: FiltersRef, sort: SortRef, fetchFn: FetchFn): PaginationRef {
   const pagination = reactive<Writeable<PaginationProps>>({
     ...options,
     onUpdatePage: async (page) => {
       pagination.page = page
-      await fetchFn(filters, pagination)
+      await fetchFn(filters, pagination, sort)
     },
     onUpdatePageSize: async (pageSize) => {
       pagination.pageSize = pageSize
       pagination.page = 1
-      await fetchFn(filters, pagination)
+      await fetchFn(filters, pagination, sort)
     },
   })
 

@@ -40,7 +40,7 @@ watch(() => operatorValue, (operator, oldOperator) => {
 })
 
 function onConfirm() {
-  if (!operatorValue)
+  if (!operatorValue || filterValue === null)
     return
 
   emit('confirm', operatorValue, filterValue)

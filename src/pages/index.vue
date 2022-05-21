@@ -1,9 +1,8 @@
 <script setup lang="ts">
 /* eslint-disable no-console */
-import type { DataTableBaseColumn, DataTableFilterState, PaginationProps } from 'naive-ui'
-import type { WorkerHttpvfs } from 'sql.js-httpvfs'
+import type { DataTableBaseColumn, DataTableFilterState, DataTableSortState, PaginationProps } from 'naive-ui'
 import { useDbWorkerStore } from '~/stores/db'
-import type { AppTableColumns, FiltersRef, PaginationRef } from '~/composables'
+import type { AppTableColumns, FiltersRef, PaginationRef, SortRef } from '~/composables'
 import { AppTableFilterType, useDataTable } from '~/composables'
 
 const { t } = useI18n()
@@ -81,7 +80,7 @@ let loading = $ref(true)
 let units = $ref<Unit[]>([])
 
 const columnOptions: AppTableColumns = [
-  { title: 'Rank', key: 'rank_display' },
+  { title: 'Rank', key: 'rank', displayKey: 'rank_display' },
   {
     title: '名稱',
     key: 'name1',
@@ -90,30 +89,32 @@ const columnOptions: AppTableColumns = [
       tooltip: true,
     },
     filterType: AppTableFilterType.STRING,
+    sorter: true,
   },
-  { title: t('R後?'), key: 'is_inverse_display', align: 'center' },
-  { title: t('MA?'), key: 'is_ma_display', align: 'center' },
-  { title: t('距離'), key: 'range_display', align: 'center' },
+  { title: t('R後?'), key: 'is_inverse', displayKey: 'is_inverse_display', align: 'center' },
+  { title: t('MA?'), key: 'is_ma', displayKey: 'is_ma_display', align: 'center' },
+  { title: t('距離'), key: 'range', displayKey: 'range_display', align: 'center' },
   { title: t('血'), key: 'hp', align: 'right', filterType: AppTableFilterType.NUMBER },
   { title: t('索敵'), key: 'search_distance', align: 'right', filterType: AppTableFilterType.NUMBER },
   { title: t('攻'), key: 'attack', align: 'right', filterType: AppTableFilterType.NUMBER },
   { title: t('防'), key: 'defense', align: 'right', filterType: AppTableFilterType.NUMBER },
   { title: t('速'), key: 'speed', align: 'right', filterType: AppTableFilterType.NUMBER },
   { title: t('敏'), key: 'agility', align: 'right', filterType: AppTableFilterType.NUMBER },
-  { title: t('氣槽'), key: 'boost', align: 'right', filterType: AppTableFilterType.NUMBER },
+  { title: t('耗氣'), key: 'boost', align: 'right', filterType: AppTableFilterType.NUMBER },
   {
     title: t('盾'),
     key: 'shield_group',
     align: 'center',
+    sorter: false,
     children: [
-      { title: t('盾'), key: 'shield_display', align: 'right', filterType: AppTableFilterType.NUMBER },
-      { title: t('%'), key: 'shield_percent_display', align: 'right', filterType: AppTableFilterType.NUMBER },
-      { title: t('類型'), key: 'shield_type_display', align: 'right' },
-      { title: t('1武'), key: 'shield_dir_w1_display', align: 'center' },
-      { title: t('2武'), key: 'shield_dir_w2_display', align: 'center' },
-      { title: t('3武'), key: 'shield_dir_w3_display', align: 'center' },
-      { title: t('4武'), key: 'shield_dir_w4_display', align: 'center' },
-      { title: t('5武'), key: 'shield_dir_w5_display', align: 'center' },
+      { title: t('盾'), key: 'shield', displayKey: 'shield_display', align: 'right', filterType: AppTableFilterType.NUMBER },
+      { title: t('%'), key: 'shield_percent', displayKey: 'shield_percent_display', align: 'right', filterType: AppTableFilterType.NUMBER },
+      { title: t('類型'), key: 'shield_type', displayKey: 'shield_type_display', align: 'right' },
+      // { title: t('1武'), key: 'shield_dir_w1_display', align: 'center' },
+      // { title: t('2武'), key: 'shield_dir_w2_display', align: 'center' },
+      // { title: t('3武'), key: 'shield_dir_w3_display', align: 'center' },
+      // { title: t('4武'), key: 'shield_dir_w4_display', align: 'center' },
+      // { title: t('5武'), key: 'shield_dir_w5_display', align: 'center' },
     ],
   },
 ]
@@ -127,33 +128,20 @@ const paginationOptions: PaginationProps = {
   pageSlot: 5,
 }
 
-const { filters, pagination, columns } = useDataTable({
+const { filters, sort, pagination, columns } = useDataTable({
   columnOptions,
   paginationOptions,
-  fetchFn: async (filters: FiltersRef, pagination: PaginationRef): Promise<void> => {
-    await fetchData(workerStore.worker!, filters, pagination)
+  fetchFn: async (filters: FiltersRef, pagination: PaginationRef, sort: SortRef): Promise<void> => {
+    await fetchData(filters, pagination, sort)
   },
 })
 
-// const pagination = reactive({
-//   itemCount: 0,
-//   page: 1,
-//   pageSize: 20,
-//   pageSizes: [10, 20, 50],
-//   showSizePicker: true,
-//   pageSlot: 5,
-//   onChange: async (page: number) => {
-//     pagination.page = page
-//     await fetchData(workerStore.worker!)
-//   },
-//   onUpdatePageSize: async (pageSize: number) => {
-//     pagination.pageSize = pageSize
-//     pagination.page = 1
-//     await fetchData(workerStore.worker!)
-//   },
-// })
-// let filters = $ref<Record<string, { operator: string; value: string | number } | undefined>>({})
-async function fetchData(worker: WorkerHttpvfs, filters: FiltersRef, pagination: PaginationRef) {
+async function fetchData(filters: FiltersRef, pagination: PaginationRef, sort: SortRef) {
+  if (workerStore.worker === null)
+    return
+
+  const worker = workerStore.worker
+
   loading = true
 
   const wheres = Object.entries(filters.value)
@@ -167,10 +155,19 @@ async function fetchData(worker: WorkerHttpvfs, filters: FiltersRef, pagination:
   if (wheres.length)
     where = `where ${wheres.join(' and ')}`
 
+  let orderBy = ''
+  if (sort.value) {
+    const { columnKey, order } = sort.value
+    const column = columnKey === 'rank' ? 'rank, rank_suf' : columnKey
+    const sqlOrder = order === 'ascend' ? 'asc' : 'desc'
+    orderBy = `order by ${column} ${sqlOrder}`
+  }
+
   const { pageSize, page } = pagination
   units = (await worker!.db.query(`
   select * from units
   ${where}
+  ${orderBy}
   limit ${pageSize} offset ${pageSize! * (page! - 1)}`) as Partial<Unit>[])
     .map(record => new Unit(record))
 
@@ -180,125 +177,56 @@ async function fetchData(worker: WorkerHttpvfs, filters: FiltersRef, pagination:
 
   loading = false
 }
-workerStore.$subscribe(async (_, { w }) => {
-  if (w === null)
-    return
-
-  await fetchData(w, filters, pagination)
-})
+workerStore.$subscribe(() => fetchData(filters, pagination, sort))
 onMounted(async () => {
   if (workerStore.worker === null || units.length > 0)
     return
 
-  await fetchData(workerStore.worker, filters, pagination)
+  await fetchData(filters, pagination, sort)
 })
-
-// watch(() => filters, async () => {
-//   pagination.page = 1
-//   await fetchData(workerStore.worker!)
-//   console.log('filters changed, fetched')
-// })
-
-// function createNameColumn(): DataTableBaseColumn {
-//   return {
-//     title: '名稱',
-//     key: 'name1',
-//     width: 300,
-//     ellipsis: {
-//       tooltip: true,
-//     },
-//     filter: true,
-//     filterOptionValue: null,
-//     renderFilterMenu: undefined,
-//   }
-// }
-
-// const nameColumn = reactive<DataTableBaseColumn>(createNameColumn())
-// nameColumn.renderFilterMenu = ({ hide }) => {
-//   return h(StringFilterMenu, {
-//     value: nameColumn.filterOptionValue,
-//     onClear: () => {
-//       nameColumn.filterOptionValue = null
-//       filters = {
-//         ...filters,
-//         [nameColumn.key]: undefined,
-//       }
-//       hide()
-//     },
-//     onConfirm: (v: FilterOptionValue | null | undefined) => {
-//       nameColumn.filterOptionValue = v
-//       filters = {
-//         ...filters,
-//         [nameColumn.key]: v ? { operator: 'LIKE', value: `"%${v}%"` } : undefined,
-//       }
-//       hide()
-//     },
-//   })
-// }
-
-// const columns = reactive<DataTableColumns>([
-//   { title: 'Rank', key: 'rank_display' },
-//   nameColumn,
-//   {
-//     title: t('R後?'),
-//     key: 'is_inverse_display',
-//     align: 'center',
-//     filter: true,
-//     defaultFilterOptionValues: [],
-//     filterOptions: [{ label: 'R前', value: 0 }, { label: 'R後', value: 1 }],
-//   },
-//   { title: t('MA?'), key: 'is_ma_display', align: 'center' },
-//   { title: t('距離'), key: 'range_display', align: 'center' },
-//   { title: t('血'), key: 'hp', align: 'right' },
-//   { title: t('索敵'), key: 'search_distance', align: 'right' },
-//   { title: t('攻'), key: 'attack', align: 'right' },
-//   { title: t('防'), key: 'defense', align: 'right' },
-//   { title: t('速'), key: 'speed', align: 'right' },
-//   { title: t('敏'), key: 'agility', align: 'right' },
-//   { title: t('氣槽'), key: 'boost', align: 'right' },
-//   {
-//     title: t('盾'),
-//     key: 'shield_group',
-//     align: 'center',
-//     children: [
-
-//       { title: t('盾'), key: 'shield_display', align: 'right' },
-//       { title: t('%'), key: 'shield_percent_display', align: 'right' },
-//       { title: t('類型'), key: 'shield_type_display', align: 'right' },
-//       { title: t('1武'), key: 'shield_dir_w1_display', align: 'center' },
-//       { title: t('2武'), key: 'shield_dir_w2_display', align: 'center' },
-//       { title: t('3武'), key: 'shield_dir_w3_display', align: 'center' },
-//       { title: t('4武'), key: 'shield_dir_w4_display', align: 'center' },
-//       { title: t('5武'), key: 'shield_dir_w5_display', align: 'center' },
-//     ],
-//   },
-// ])
 
 function onFiltersChange(filters: DataTableFilterState, column: DataTableBaseColumn) {
   console.log('filters changed', filters, column)
 }
+
+function onSortersChange(sortState: DataTableSortState) {
+  sort.value = sortState.order === false ? undefined : sortState
+  fetchData(filters, pagination, sort)
+}
 </script>
 
 <template>
-  <n-data-table
-    remote
-    :loading="loading"
-    :columns="columns"
-    :data="units"
-    :pagination="pagination"
-    pagination-behavior-on-filter="first"
-    :theme-overrides="{
-      tdPaddingMedium: '4px',
-      tdPaddingLarge: '4px',
-      thPaddingMedium: '4px',
-      thPaddingLarge: '4px',
-      thPaddingSmall: '4px',
-      tdPaddingSmall: '4px',
-    }"
-    striped
-    max-height="calc(100vh - 240px)"
-    :on-update:filters="onFiltersChange"
-  />
+  <n-tabs animated>
+    <n-tab-pane name="sgnoodles" tab="星洲米粉 SGNoodles">
+      <n-data-table
+        remote
+        :loading="loading"
+        :columns="columns"
+        :data="units"
+        :pagination="pagination"
+        pagination-behavior-on-filter="first"
+        :theme-overrides="{
+          tdPaddingMedium: '4px',
+          tdPaddingLarge: '4px',
+          thPaddingMedium: '4px',
+          thPaddingLarge: '4px',
+          thPaddingSmall: '4px',
+          tdPaddingSmall: '4px',
+        }"
+        striped
+        max-height="calc(100vh - 285px)"
+        :on-update:filters="onFiltersChange"
+        :on-update:sorter="onSortersChange"
+        :scroll-x="1500"
+      />
+    </n-tab-pane>
+    <n-tab-pane name="seal" tab="醬燒海豹 Sauce Burn Seal">
+      <div>Coming Soon...</div>
+    </n-tab-pane>
+    <n-tab-pane name="original" tab="龜霸 Acguy / 國服 Original">
+      <div>Coming Soon...</div>
+    </n-tab-pane>
+  </n-tabs>
 </template>
 
 <route lang="yaml">
