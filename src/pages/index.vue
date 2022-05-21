@@ -156,11 +156,10 @@ async function fetchData(filters: FiltersRef, pagination: PaginationRef, sort: S
     where = `where ${wheres.join(' and ')}`
 
   let orderBy = ''
-  if (sort.value) {
-    const { columnKey, order } = sort.value
-    const column = columnKey === 'rank' ? 'rank, rank_suf' : columnKey
-    const sqlOrder = order === 'ascend' ? 'asc' : 'desc'
-    orderBy = `order by ${column} ${sqlOrder}`
+  const sortValue = sort.value
+  if (sortValue && sortValue.length) {
+    const orders = sortValue.map(({ columnKey, order }) => `${columnKey} ${order === 'ascend' ? 'asc' : 'desc'}`)
+    orderBy = `order by ${orders.join(', ')}`
   }
 
   const { pageSize, page } = pagination
@@ -190,7 +189,20 @@ function onFiltersChange(filters: DataTableFilterState, column: DataTableBaseCol
 }
 
 function onSortersChange(sortState: DataTableSortState) {
-  sort.value = sortState.order === false ? undefined : sortState
+  if (sortState.order === false) {
+    sort.value = []
+  }
+  else {
+    if (sortState.columnKey === 'rank') {
+      sort.value = [
+        { columnKey: 'rank', order: sortState.order },
+        { columnKey: 'rank_suf', order: sortState.order },
+      ]
+    }
+    else {
+      sort.value = [sortState]
+    }
+  }
   fetchData(filters, pagination, sort)
 }
 </script>

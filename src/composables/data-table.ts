@@ -59,7 +59,7 @@ export declare interface Filter {
 export declare type Filters = Record<string, Filter | undefined>
 export declare type FiltersRef = Ref<UnwrapRef<Filters>>
 export declare type PaginationRef = UnwrapNestedRefs<Writeable<PaginationProps>>
-export declare type SortRef = Ref<UnwrapRef<DataTableSortState | undefined>>
+export declare type SortRef = Ref<UnwrapRef<Array<DataTableSortState> | undefined>>
 export declare type FetchFn = (filters: FiltersRef, pagination: PaginationRef, sort: SortRef) => Promise<void>
 
 export declare interface UseDataTableOptions<T = InternalRowData> {
