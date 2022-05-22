@@ -77,7 +77,7 @@ export function useDataTable<T = InternalRowData>({
   const pagination = createPagination(paginationOptions, filters, sort, fetchFn)
 
   const columns = reactive<AppTableColumns<T>>(
-    columnOptions.map(option => createColumn<T>(option, filters)),
+    columnOptions.map(option => createColumn<T>(option, filters, pagination)),
   )
 
   // on filters changed, fetch data
@@ -94,7 +94,7 @@ export function useDataTable<T = InternalRowData>({
   }
 }
 
-function createColumn<T>(opt: AppTableColumn<T>, filters: FiltersRef) {
+function createColumn<T>(opt: AppTableColumn<T>, filters: FiltersRef, pagination: PaginationRef) {
   const options = { ...opt }
   if (options.filterType) {
     options.filter = true
@@ -106,7 +106,7 @@ function createColumn<T>(opt: AppTableColumn<T>, filters: FiltersRef) {
     options.sorter = true
 
   if (options.children && Array.isArray(options.children))
-    options.children = options.children.map(opt => createColumn(opt, filters))
+    options.children = options.children.map(opt => createColumn(opt, filters, pagination))
 
   if (options.render === undefined && options.displayKey)
     options.render = row => row[options.displayKey]
@@ -115,10 +115,10 @@ function createColumn<T>(opt: AppTableColumn<T>, filters: FiltersRef) {
 
   switch (options.filterType) {
     case AppTableFilterType.STRING:
-      reactiveColumn.renderFilterMenu = ({ hide }) => renderStringFilterMenu<T>(reactiveColumn, filters, hide)
+      reactiveColumn.renderFilterMenu = ({ hide }) => renderStringFilterMenu<T>(reactiveColumn, filters, pagination, hide)
       break
     case AppTableFilterType.NUMBER:
-      reactiveColumn.renderFilterMenu = ({ hide }) => renderNumberFilterMenu<T>(reactiveColumn, filters, hide)
+      reactiveColumn.renderFilterMenu = ({ hide }) => renderNumberFilterMenu<T>(reactiveColumn, filters, pagination, hide)
       break
   }
 
@@ -128,12 +128,14 @@ function createColumn<T>(opt: AppTableColumn<T>, filters: FiltersRef) {
 function renderStringFilterMenu<T>(
   reactiveColumn: UnwrapNestedRefs<AppTableColumn<T>>,
   filters: FiltersRef,
+  pagination: PaginationRef,
   hide: () => void,
 ): VNodeChild {
   return h(StringFilterMenu, {
     value: reactiveColumn.filterOptionValue,
     onClear: () => {
       reactiveColumn.filterOptionValue = null
+      pagination.page = 1
       setFilter(
         filters,
         reactiveColumn.key,
@@ -143,6 +145,7 @@ function renderStringFilterMenu<T>(
     },
     onConfirm: (v: FilterOptionValue | null | undefined) => {
       reactiveColumn.filterOptionValue = v
+      pagination.page = 1
       setFilter(
         filters,
         reactiveColumn.key,
@@ -156,6 +159,7 @@ function renderStringFilterMenu<T>(
 function renderNumberFilterMenu<T>(
   reactiveColumn: UnwrapNestedRefs<AppTableColumn<T>>,
   filters: FiltersRef,
+  pagination: PaginationRef,
   hide: () => void,
 ): VNodeChild {
   return h(NumberFilterMenu, {
@@ -163,6 +167,7 @@ function renderNumberFilterMenu<T>(
     value: reactiveColumn.filterOptionValue?.value,
     onClear: () => {
       reactiveColumn.filterOptionValue = null
+      pagination.page = 1
       setFilter(
         filters,
         reactiveColumn.key,
@@ -172,6 +177,7 @@ function renderNumberFilterMenu<T>(
     },
     onConfirm: (operator: FilterOperator, value: FilterOptionValue | null | undefined) => {
       reactiveColumn.filterOptionValue = { operator, value }
+      pagination.page = 1
       setFilter(
         filters,
         reactiveColumn.key,
