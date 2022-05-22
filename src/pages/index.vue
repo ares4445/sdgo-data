@@ -84,7 +84,9 @@ const columnOptions: AppTableColumns = [
   { title: t('Rank'), key: 'rank', displayKey: 'rank_display' },
   {
     key: 'image',
-    render: row => h(NImage, { src: `/sdgo-data/sgnoodles/units/${row.id}-1.png`, width: 50 }),
+    render: row => row.is_inverse
+      ? undefined
+      : h(NImage, { src: `/sdgo-data/sgnoodles/units/${row.id}-1.png`, width: 50, height: 50, objectFit: 'cover' }),
     sorter: false,
   },
   {
