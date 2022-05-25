@@ -27,7 +27,7 @@ export const useDbWorkerStore = defineStore('dbWorker', {
           config: {
             serverMode: 'full',
             requestChunkSize: 4096,
-            url: 'sgnoodles.sqlite',
+            url: 'data.sqlite',
           },
         }],
         workerUrl,

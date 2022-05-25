@@ -150,7 +150,10 @@ async function fetchData(filters: FiltersRef, pagination: PaginationRef, sort: S
 
   loading = true
 
-  const wheres = Object.entries(filters.value)
+  const wheres = Object.entries({
+    ...(filters.value),
+    ...{ server_id: { operator: '=', value: 1 } },
+  })
     .filter(([_, v]) => !!v)
     .map(([field, v]) => {
       const { operator, value } = v!
