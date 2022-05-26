@@ -216,7 +216,7 @@ table {
   border-collapse: collapse;
 }
 th, td {
-  border: 1px solid white;
+  border: 1px solid;
   padding: 0;
 }
 </style>
