@@ -93,16 +93,16 @@ onMounted(() => query())
             索敵距離
           </th>
           <th rowspan="2">
-            攻擊
+            <span color-red>攻擊</span>
           </th>
           <th rowspan="2">
-            防禦
+            <span color-blue>防禦</span>
           </th>
           <th rowspan="2">
             速度
           </th>
           <th rowspan="2">
-            敏捷
+            <span color-green>敏捷</span>
           </th>
           <th rowspan="2">
             耗氣
@@ -135,10 +135,16 @@ onMounted(() => query())
           <td>{{ unit.is_ma_display }}</td>
           <td>{{ unit.hp }}</td>
           <td>{{ unit.search_distance }}</td>
-          <td>{{ unit.attack }}</td>
-          <td>{{ unit.defense }}</td>
+          <td color-red>
+            {{ unit.attack }}
+          </td>
+          <td color-blue>
+            {{ unit.defense }}
+          </td>
           <td>{{ unit.speed }}</td>
-          <td>{{ unit.agility }}</td>
+          <td color-green>
+            {{ unit.agility }}
+          </td>
           <td>{{ unit.boost }}</td>
           <td>{{ unit.shield_display }}</td>
           <td>{{ unit.shield_percent_display }}</td>
