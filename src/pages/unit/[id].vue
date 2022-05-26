@@ -142,7 +142,7 @@ onMounted(() => query())
           <td>{{ unit.shield_display }}</td>
           <td>{{ unit.shield_percent_display }}</td>
           <td>{{ unit.shield_type_display }}</td>
-          <td><shield-dir :dirs="unit.w1_shield_dirs" /></td>
+          <td><shield-dir v-if="units.shield" :dirs="unit.w1_shield_dirs" /></td>
           <template v-if="units[0].shield_dir_diff || units?.[1]?.shield_dir_diff">
             <td><shield-dir :dirs="unit.w2_shield_dirs" /></td>
             <td><shield-dir :dirs="unit.w3_shield_dirs" /></td>
