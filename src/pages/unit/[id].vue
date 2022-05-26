@@ -135,15 +135,15 @@ onMounted(() => query())
           <td>{{ unit.is_ma_display }}</td>
           <td>{{ unit.hp }}</td>
           <td>{{ unit.search_distance }}</td>
-          <td color-red>
-            {{ unit.attack }}
+          <td>
+            <span color-red>{{ unit.attack }}</span>
           </td>
-          <td color-blue>
-            {{ unit.defense }}
+          <td>
+            <span color-blue>{{ unit.defense }}</span>
           </td>
           <td>{{ unit.speed }}</td>
-          <td color-green>
-            {{ unit.agility }}
+          <td>
+            <span color-green>{{ unit.agility }}</span>
           </td>
           <td>{{ unit.boost }}</td>
           <td>{{ unit.shield_display }}</td>
