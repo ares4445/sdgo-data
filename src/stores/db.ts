@@ -19,15 +19,15 @@ export const useDbWorkerStore = defineStore('dbWorker', {
     async createWorker() {
       this.loading = true
 
-      const workerUrl = 'sqlite.worker.js'
-      const wasmUrl = 'sql-wasm.wasm'
+      const workerUrl = '/sqlite.worker.js'
+      const wasmUrl = '/sql-wasm.wasm'
       this.w = await createDbWorker(
         [{
           from: 'inline',
           config: {
             serverMode: 'full',
             requestChunkSize: 4096,
-            url: 'data.sqlite',
+            url: '/data.sqlite',
           },
         }],
         workerUrl,

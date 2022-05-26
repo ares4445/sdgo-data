@@ -2,78 +2,13 @@
 /* eslint-disable no-console */
 import type { DataTableBaseColumn, DataTableFilterState, DataTableSortState, PaginationProps } from 'naive-ui'
 import { NImage } from 'naive-ui'
+import { RouterLink } from 'vue-router'
 import { useDbWorkerStore } from '~/stores/db'
 import type { AppTableColumns, FiltersRef, PaginationRef, SortRef } from '~/composables'
 import { AppTableFilterType, useDataTable } from '~/composables'
+import { Unit } from '~/models/unit'
 
 const { t } = useI18n()
-
-type RankType = 1 | 2 | 3 | 4
-type RankSufType = 1 | 2 | 3 | 4 | 5
-type RangeType = 0 | 1 | 2
-
-class Unit {
-  constructor(data: Partial<Unit>) {
-    Object.assign(this, data)
-  }
-
-  id!: number
-  name1!: String
-  is_inverse!: number
-  ma!: number
-  rank!: RankType
-  rank_suf!: RankSufType
-  range_type!: RangeType
-  hp!: number
-  attack!: number
-  defense!: number
-  speed!: number
-  agility!: number
-  boost!: number
-
-  shield!: number
-  shield_percent!: number
-  shield_type!: number
-  shield_dir_w1!: number
-  shield_dir_w2!: number
-  shield_dir_w3!: number
-  shield_dir_w4!: number
-  shield_dir_w5!: number
-
-  get is_inverse_display() { return this.is_inverse ? '✓' : null }
-  get is_ma_display() { return this.ma ? '✓' : null }
-
-  get rank_display() {
-    return { 1: 'C', 2: 'B', 3: 'A', 4: 'S' }[this.rank] + { 1: '', 2: '', 3: 'S', 4: 'R', 5: 'U' }[this.rank_suf]
-  }
-
-  get range_display() {
-    return { 0: '近', 1: '中', 2: '遠' }[this.range_type]
-  }
-
-  get shield_display() { return this.shield || null }
-  get shield_percent_display() { return this.shield_percent || null }
-  get shield_type_display() { return this.shield ? { 0: '全部', 3: '光束' }[this.shield_type] : null }
-
-  get shield_dir_w1_display() { return this.shieldDir(this.shield_dir_w1) }
-  get shield_dir_w2_display() { return this.shieldDir(this.shield_dir_w2) }
-  get shield_dir_w3_display() { return this.shieldDir(this.shield_dir_w3) }
-  get shield_dir_w4_display() { return this.shieldDir(this.shield_dir_w4) }
-  get shield_dir_w5_display() { return this.shieldDir(this.shield_dir_w5) }
-
-  shieldDir(dir: number) {
-    return {
-      1: '左',
-      2: '右',
-      3: '左右',
-      4: '後',
-      5: '前後左右',
-      6: '前',
-      7: '前左右',
-      8: '後左右',
-    }[dir]
-  }
-}
 
 const workerStore = useDbWorkerStore()
 
@@ -98,6 +33,7 @@ const columnOptions: AppTableColumns = [
     },
     filterType: AppTableFilterType.STRING,
     sorter: true,
+    render: ({ id, parent_unit_id, name1 }) => h(RouterLink, { to: `/unit/${parent_unit_id || id}`, innerHTML: name1 }),
   },
   { title: t('R後?'), key: 'is_inverse', displayKey: 'is_inverse_display', align: 'center' },
   { title: t('MA?'), key: 'ma', displayKey: 'is_ma_display', align: 'center' },
