@@ -34,7 +34,7 @@ const columnOptions: AppTableColumns = [
     render: ({ id, parent_unit_id, name1 }) => h(RouterLink, { to: `/unit/${parent_unit_id || id}`, innerHTML: name1 }),
   },
   { title: t('R後?'), key: 'is_inverse', displayKey: 'is_inverse_display', align: 'center' },
-  { title: t('MA?'), key: 'ma', displayKey: 'is_ma_display', align: 'center' },
+  { title: t('MA?'), key: 'is_ma', displayKey: 'is_ma_display', align: 'center' },
   { title: t('距離'), key: 'range_type', displayKey: 'range_display', align: 'center' },
   { title: t('血'), key: 'hp', align: 'right', filterType: AppTableFilterType.NUMBER },
   { title: t('索敵'), key: 'search_distance', align: 'right', filterType: AppTableFilterType.NUMBER },
