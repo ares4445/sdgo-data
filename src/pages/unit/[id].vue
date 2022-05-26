@@ -210,18 +210,8 @@ table {
 }
 th, td {
   border: 1px solid white;
-  /* border-width: 0 0 1px; */
   padding: 0;
 }
-/* th:first-child {
-  border-right-width: 0;
-}
-th:not(:first-child), td:not(:first-child) {
-  border-left-width: 0;
-}
-td:not(:first-child) {
-  border-top-width: 0;
-} */
 </style>
 
 <route lang="yaml">
