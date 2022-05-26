@@ -54,10 +54,10 @@ onMounted(() => query())
 </script>
 
 <template>
-  <div v-if="units?.length" class="text-left">
-    <div class="grid gap-4" style="grid-template-columns: auto auto 1fr">
+  <div v-if="units?.length" class="unit-detail text-left">
+    <div class="title-grid grid gap-4">
       <n-image :src="`/sdgo-data/sgnoodles/units/${units[0].id}-1.png`" object-fit="scale-down" />
-      <n-image :src="`/sdgo-data/sgnoodles/units/${units[0].id}-2.png`" object-fit="scale-down" />
+      <n-image class="xs-display-none" :src="`/sdgo-data/sgnoodles/units/${units[0].id}-2.png`" object-fit="scale-down" />
       <div class="flex flex-col">
         <h2 class="m0">
           {{ units[0].name1 }}
@@ -79,100 +79,96 @@ onMounted(() => query())
         </div>
       </div>
     </div>
-    <table class="table table-fixed w-full text-center mt-4">
-      <thead>
-        <tr>
-          <th v-if="units.length > 1" rowspan="2" />
-          <th rowspan="2">
-            MA?
-          </th>
-          <th rowspan="2">
-            血量
-          </th>
-          <th rowspan="2">
-            索敵距離
-          </th>
-          <th rowspan="2">
-            <span color-red>攻擊</span>
-          </th>
-          <th rowspan="2">
-            <span color-blue>防禦</span>
-          </th>
-          <th rowspan="2">
-            速度
-          </th>
-          <th rowspan="2">
-            <span color-green>敏捷</span>
-          </th>
-          <th rowspan="2">
-            耗氣
-          </th>
-          <th :colspan="shield_dir_diff ? 8 : 4">
-            盾
-          </th>
-        </tr>
-        <tr>
-          <th>盾</th>
-          <th>%</th>
-          <th>類型</th>
-          <template v-if="shield_dir_diff">
-            <th>1武</th>
-            <th>2武</th>
-            <th>3武</th>
-            <th>4武</th>
-            <th>5武</th>
-          </template>
-          <th v-else>
-            方向
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="unit in units" :key="unit.id">
-          <th v-if="units.length > 1">
-            {{ unit.is_inverse ? 'R後' : null }}
-          </th>
-          <td>{{ unit.is_ma_display }}</td>
-          <td>{{ unit.hp }}</td>
-          <td>{{ unit.search_distance }}</td>
-          <td>
-            <span color-red>{{ unit.attack }}</span>
-          </td>
-          <td>
-            <span color-blue>{{ unit.defense }}</span>
-          </td>
-          <td>{{ unit.speed }}</td>
-          <td>
-            <span color-green>{{ unit.agility }}</span>
-          </td>
-          <td>{{ unit.boost }}</td>
-          <td>{{ unit.shield_display }}</td>
-          <td>{{ unit.shield_percent_display }}</td>
-          <td>{{ unit.shield_type_display }}</td>
-          <td><shield-dir v-if="unit.shield" :dirs="unit.w1_shield_dirs" /></td>
-          <template v-if="shield_dir_diff">
-            <td><shield-dir :dirs="unit.w2_shield_dirs" /></td>
-            <td><shield-dir :dirs="unit.w3_shield_dirs" /></td>
-            <td><shield-dir :dirs="unit.w4_shield_dirs" /></td>
-            <td><shield-dir :dirs="unit.w5_shield_dirs" /></td>
-          </template>
-        </tr>
-      </tbody>
-    </table>
-    <div class="grid mt-4" style="grid-auto-flow: column dense; grid-template-rows: repeat(3, auto);grid-template-columns: auto 1fr 1fr">
-      <div class="border p-2">
-        武器1
-      </div>
-      <div class="border p-2">
-        武器2
-      </div>
-      <div class="border p-2">
-        武器3
-      </div>
+    <div class="table-container">
+      <table class="table text-center mt-4">
+        <thead>
+          <tr>
+            <th v-if="units.length > 1" rowspan="2" />
+            <th rowspan="2">
+              MA?
+            </th>
+            <th rowspan="2">
+              血量
+            </th>
+            <th rowspan="2">
+              索敵
+            </th>
+            <th rowspan="2">
+              <span color-red>攻擊</span>
+            </th>
+            <th rowspan="2">
+              <span color-blue>防禦</span>
+            </th>
+            <th rowspan="2">
+              速度
+            </th>
+            <th rowspan="2">
+              <span color-green>敏捷</span>
+            </th>
+            <th rowspan="2">
+              耗氣
+            </th>
+            <th :colspan="shield_dir_diff ? 8 : 4">
+              盾
+            </th>
+          </tr>
+          <tr>
+            <th>盾</th>
+            <th>%</th>
+            <th>類型</th>
+            <template v-if="shield_dir_diff">
+              <th>1武</th>
+              <th>2武</th>
+              <th>3武</th>
+              <th>4武</th>
+              <th>5武</th>
+            </template>
+            <th v-else>
+              方向
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="unit in units" :key="unit.id">
+            <th v-if="units.length > 1">
+              {{ unit.is_inverse ? 'R後' : null }}
+            </th>
+            <td>{{ unit.is_ma_display }}</td>
+            <td>{{ unit.hp }}</td>
+            <td>{{ unit.search_distance }}</td>
+            <td>
+              <span color-red>{{ unit.attack }}</span>
+            </td>
+            <td>
+              <span color-blue>{{ unit.defense }}</span>
+            </td>
+            <td>{{ unit.speed }}</td>
+            <td>
+              <span color-green>{{ unit.agility }}</span>
+            </td>
+            <td>{{ unit.boost }}</td>
+            <td>{{ unit.shield_display }}</td>
+            <td>{{ unit.shield_percent_display }}</td>
+            <td>{{ unit.shield_type_display }}</td>
+            <td><shield-dir v-if="unit.shield" :dirs="unit.w1_shield_dirs" /></td>
+            <template v-if="shield_dir_diff">
+              <td><shield-dir :dirs="unit.w2_shield_dirs" /></td>
+              <td><shield-dir :dirs="unit.w3_shield_dirs" /></td>
+              <td><shield-dir :dirs="unit.w4_shield_dirs" /></td>
+              <td><shield-dir :dirs="unit.w5_shield_dirs" /></td>
+            </template>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="weapons-grid grid grid-cols-1 mt-4">
       <template v-for="unit in units" :key="unit.id">
+        <div v-if="units.length" class="p-2 text-center">
+          {{ unit.is_inverse ? 'R後' : 'R前' }}
+        </div>
         <div v-for="(weapon, slot) in weaponsView[unit.id]" :key="`${unit.id}-${slot}`" class="border p-2">
           <template v-if="weapon">
-            <div class="grid grid-cols-4">
+            <div class="grid grid-cols-2">
               <span class="font-600">{{ weapon.weapon_name }}</span>
               <div>
                 <n-tag size="small">
@@ -218,13 +214,57 @@ onMounted(() => query())
 </template>
 
 <style scoped>
+.table-container {
+  overflow-x: auto;
+}
+@media (min-width: 640px) {
+  .table-container {
+    width: 100%;
+    overflow-x: visible;
+  }
+}
 table {
   border-spacing: 0;
   border-collapse: collapse;
 }
+@media (min-width: 640px) {
+  table {
+    min-width: 100%;
+    table-layout: fixed;
+  }
+}
 th, td {
   border: 1px solid;
-  padding: 0;
+  padding: 0 0.5em;
+}
+
+.xs-display-none {
+  display: none;
+}
+@media (min-width: 640px) {
+  .xs-display-none {
+    display: inherit;
+  }
+}
+
+.title-grid {
+  grid-template-columns: auto auto 1fr;
+}
+@media (min-width: 640px) {
+  .title-grid {
+    grid-template-columns: auto auto 1fr;
+  }
+}
+
+.weapons-grid {
+  grid-auto-flow: column dense;
+  grid-template-rows: repeat(8, auto);
+}
+@media (min-width: 640px) {
+  .weapons-grid {
+    grid-template-rows: repeat(4, auto);
+    grid-template-columns: 1fr 1fr;
+  }
 }
 </style>
 
