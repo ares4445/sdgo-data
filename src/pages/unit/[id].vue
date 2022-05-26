@@ -56,8 +56,8 @@ onMounted(() => query())
 <template>
   <div v-if="units?.length" class="text-left">
     <div class="grid gap-4" style="grid-template-columns: auto auto 1fr">
-      <n-image :src="`/sdgo-data/sgnoodles/units/${units[0].id}-1.png`" />
-      <n-image :src="`/sdgo-data/sgnoodles/units/${units[0].id}-2.png`" />
+      <n-image :src="`/sdgo-data/sgnoodles/units/${units[0].id}-1.png`" object-fit="scale-down" />
+      <n-image :src="`/sdgo-data/sgnoodles/units/${units[0].id}-2.png`" object-fit="scale-down" />
       <div class="flex flex-col">
         <h2 class="m0">
           {{ units[0].name1 }}
