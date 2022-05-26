@@ -106,7 +106,7 @@ onMounted(() => query())
           <th rowspan="2">
             耗氣
           </th>
-          <th colspan="8">
+          <th :colspan="(units[0].shield_dir_diff || units?.[1]?.shield_dir_diff) ? 8 : 4">
             盾
           </th>
         </tr>
@@ -114,11 +114,16 @@ onMounted(() => query())
           <th>盾</th>
           <th>%</th>
           <th>類型</th>
-          <th>1武</th>
-          <th>2武</th>
-          <th>3武</th>
-          <th>4武</th>
-          <th>5武</th>
+          <template v-if="units[0].shield_dir_diff || units?.[1]?.shield_dir_diff">
+            <th>1武</th>
+            <th>2武</th>
+            <th>3武</th>
+            <th>4武</th>
+            <th>5武</th>
+          </template>
+          <th v-else>
+            方向
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -137,11 +142,13 @@ onMounted(() => query())
           <td>{{ unit.shield_display }}</td>
           <td>{{ unit.shield_percent_display }}</td>
           <td>{{ unit.shield_type_display }}</td>
-          <td>{{ unit.shield_dir_w1_display }} </td>
-          <td>{{ unit.shield_dir_w2_display }} </td>
-          <td>{{ unit.shield_dir_w3_display }} </td>
-          <td>{{ unit.shield_dir_w4_display }} </td>
-          <td>{{ unit.shield_dir_w5_display }} </td>
+          <td><shield-dir :dirs="unit.w1_shield_dirs" /></td>
+          <template v-if="units[0].shield_dir_diff || units?.[1]?.shield_dir_diff">
+            <td><shield-dir :dirs="unit.w2_shield_dirs" /></td>
+            <td><shield-dir :dirs="unit.w3_shield_dirs" /></td>
+            <td><shield-dir :dirs="unit.w4_shield_dirs" /></td>
+            <td><shield-dir :dirs="unit.w5_shield_dirs" /></td>
+          </template>
         </tr>
       </tbody>
     </table>

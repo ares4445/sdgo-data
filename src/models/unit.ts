@@ -1,6 +1,10 @@
 export type RankType = 1 | 2 | 3 | 4
 export type RankSufType = 1 | 2 | 3 | 4 | 5
 export type RangeType = 0 | 1 | 2
+export type ShieldDirection = Record<
+ 'front' | 'back' | 'left' | 'right',
+ boolean
+>
 
 export class Unit {
   constructor(data: Partial<Unit>) {
@@ -51,22 +55,33 @@ export class Unit {
   get shield_percent_display() { return this.shield_percent || null }
   get shield_type_display() { return this.shield ? { 0: '全部', 3: '光束' }[this.shield_type] : null }
 
-  get shield_dir_w1_display() { return this.shieldDir(this.shield_dir_w1) }
-  get shield_dir_w2_display() { return this.shieldDir(this.shield_dir_w2) }
-  get shield_dir_w3_display() { return this.shieldDir(this.shield_dir_w3) }
-  get shield_dir_w4_display() { return this.shieldDir(this.shield_dir_w4) }
-  get shield_dir_w5_display() { return this.shieldDir(this.shield_dir_w5) }
+  get shield_dir_diff() {
+    const dir = this.shield_dir_w1
 
-  shieldDir(dir: number) {
+    if (this.shield_dir_w2 !== dir)
+      return true
+    if (this.shield_dir_w3 !== dir)
+      return true
+    if (this.shield_dir_w4 !== dir)
+      return true
+    if (this.shield_dir_w5 !== dir)
+      return true
+
+    return false
+  }
+
+  get w1_shield_dirs() { return this.shieldDir(this.shield_dir_w1) }
+  get w2_shield_dirs() { return this.shieldDir(this.shield_dir_w2) }
+  get w3_shield_dirs() { return this.shieldDir(this.shield_dir_w3) }
+  get w4_shield_dirs() { return this.shieldDir(this.shield_dir_w4) }
+  get w5_shield_dirs() { return this.shieldDir(this.shield_dir_w5) }
+
+  shieldDir(dir: number): ShieldDirection {
     return {
-      1: '左',
-      2: '右',
-      3: '左右',
-      4: '後',
-      5: '前後左右',
-      6: '前',
-      7: '前左右',
-      8: '後左右',
-    }[dir]
+      front: [5, 6, 7].includes(dir),
+      back: [4, 5, 8].includes(dir),
+      left: [1, 3, 5, 7, 8].includes(dir),
+      right: [2, 3, 5, 7, 8].includes(dir),
+    }
   }
 }
