@@ -25,6 +25,7 @@ const weaponsView = computed(() => {
 
   return result
 })
+const shield_dir_diff = computed(() => units?.[0]?.shield_dir_diff || units?.[1]?.shield_dir_diff)
 
 async function query() {
   if (workerStore.loading || workerStore.worker === undefined)
@@ -106,7 +107,7 @@ onMounted(() => query())
           <th rowspan="2">
             耗氣
           </th>
-          <th :colspan="(units[0].shield_dir_diff || units?.[1]?.shield_dir_diff) ? 8 : 4">
+          <th :colspan="shield_dir_diff ? 8 : 4">
             盾
           </th>
         </tr>
@@ -114,7 +115,7 @@ onMounted(() => query())
           <th>盾</th>
           <th>%</th>
           <th>類型</th>
-          <template v-if="units[0].shield_dir_diff || units?.[1]?.shield_dir_diff">
+          <template v-if="shield_dir_diff">
             <th>1武</th>
             <th>2武</th>
             <th>3武</th>
@@ -143,7 +144,7 @@ onMounted(() => query())
           <td>{{ unit.shield_percent_display }}</td>
           <td>{{ unit.shield_type_display }}</td>
           <td><shield-dir v-if="unit.shield" :dirs="unit.w1_shield_dirs" /></td>
-          <template v-if="units[0].shield_dir_diff || units?.[1]?.shield_dir_diff">
+          <template v-if="shield_dir_diff">
             <td><shield-dir :dirs="unit.w2_shield_dirs" /></td>
             <td><shield-dir :dirs="unit.w3_shield_dirs" /></td>
             <td><shield-dir :dirs="unit.w4_shield_dirs" /></td>
