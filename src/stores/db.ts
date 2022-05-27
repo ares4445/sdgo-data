@@ -23,12 +23,8 @@ export const useDbWorkerStore = defineStore('dbWorker', {
       const wasmUrl = `${import.meta.env.BASE_URL}sql-wasm.wasm`
       this.w = await createDbWorker(
         [{
-          from: 'inline',
-          config: {
-            serverMode: 'full',
-            requestChunkSize: 4096,
-            url: `${import.meta.env.BASE_URL}data.sqlite`,
-          },
+          from: 'jsonconfig',
+          configUrl: `${import.meta.env.BASE_URL}config.json`,
         }],
         workerUrl,
         wasmUrl,
