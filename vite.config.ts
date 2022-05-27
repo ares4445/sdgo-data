@@ -1,5 +1,5 @@
 import path from 'path'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import Vue from '@vitejs/plugin-vue'
 import Pages from 'vite-plugin-pages'
 import generateSitemap from 'vite-ssg-sitemap'
@@ -17,8 +17,8 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 const markdownWrapperClasses = 'prose prose-sm m-auto text-left'
 
-export default defineConfig({
-  base: '/sdgo-data',
+export default ({ mode }: { mode: string }) => defineConfig({
+  base: loadEnv(mode, process.cwd()).VITE_BASE || '',
 
   resolve: {
     alias: {

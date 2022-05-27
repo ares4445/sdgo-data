@@ -51,13 +51,17 @@ order by unit_id, slot
 }
 workerStore.$subscribe(() => query())
 onMounted(() => query())
+
+const base = `${window.location.origin}/${import.meta.env.BASE_URL}`
+const image1 = computed(() => `${base}sgnoodles/units/${props.id}-1.png`)
+const image2 = computed(() => `${base}sgnoodles/units/${props.id}-2.png`)
 </script>
 
 <template>
   <div v-if="units?.length" class="unit-detail text-left">
     <div class="title-grid grid gap-4">
-      <n-image :src="`/sdgo-data/sgnoodles/units/${units[0].id}-1.png`" object-fit="scale-down" />
-      <n-image class="xs-display-none" :src="`/sdgo-data/sgnoodles/units/${units[0].id}-2.png`" object-fit="scale-down" />
+      <n-image :src="image1" object-fit="scale-down" />
+      <n-image class="xs-display-none" :src="image2" object-fit="scale-down" />
       <div class="flex flex-col">
         <h2 class="m0">
           {{ units[0].name1 }}
@@ -163,7 +167,7 @@ onMounted(() => query())
     </div>
     <div class="weapons-grid grid grid-cols-1 mt-4">
       <template v-for="unit in units" :key="unit.id">
-        <div v-if="units.length" class="p-2 text-center">
+        <div v-if="units.length > 1" class="p-2 text-center">
           {{ unit.is_inverse ? 'R後' : 'R前' }}
         </div>
         <div v-for="(weapon, slot) in weaponsView[unit.id]" :key="`${unit.id}-${slot}`" class="border p-2">

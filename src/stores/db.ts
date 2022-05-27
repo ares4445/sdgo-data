@@ -19,15 +19,15 @@ export const useDbWorkerStore = defineStore('dbWorker', {
     async createWorker() {
       this.loading = true
 
-      const workerUrl = '/sdgo-data/sqlite.worker.js'
-      const wasmUrl = '/sdgo-data/sql-wasm.wasm'
+      const workerUrl = `${import.meta.env.BASE_URL}sqlite.worker.js`
+      const wasmUrl = `${import.meta.env.BASE_URL}sql-wasm.wasm`
       this.w = await createDbWorker(
         [{
           from: 'inline',
           config: {
             serverMode: 'full',
             requestChunkSize: 4096,
-            url: '/sdgo-data/data.sqlite',
+            url: `${import.meta.env.BASE_URL}data.sqlite`,
           },
         }],
         workerUrl,

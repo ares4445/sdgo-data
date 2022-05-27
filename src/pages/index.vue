@@ -19,7 +19,7 @@ const columnOptions: AppTableColumns = [
   { title: t('Rank'), key: 'rank', displayKey: 'rank_display' },
   {
     key: 'image',
-    render: row => h(NImage, { src: `/sdgo-data/sgnoodles/units/${row.parent_unit_id || row.id}-1.png`, width: 50, height: 50, objectFit: 'cover' }),
+    render: row => h(NImage, { src: `${window.location.origin}/${import.meta.env.BASE_URL}sgnoodles/units/${row.parent_unit_id || row.id}-1.png`, width: 50, height: 50, objectFit: 'cover' }),
     sorter: false,
   },
   {
