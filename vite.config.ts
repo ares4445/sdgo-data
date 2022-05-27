@@ -18,7 +18,7 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 const markdownWrapperClasses = 'prose prose-sm m-auto text-left'
 
 export default ({ mode }: { mode: string }) => defineConfig({
-  base: loadEnv(mode, process.cwd()).VITE_BASE || '',
+  base: loadEnv(mode, process.cwd()).VITE_BASE || '/',
 
   resolve: {
     alias: {
