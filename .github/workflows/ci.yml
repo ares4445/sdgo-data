@@ -123,7 +123,7 @@ jobs:
   #       with:
   #         github_token: ${{ secrets.GITHUB_TOKEN }}
   #         publish_dir: ./dist
-  
+
   deploy-netlify:
     runs-on: ubuntu-20.04
     environment: netlify
@@ -137,10 +137,10 @@ jobs:
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v1.2
         with:
-          publish-dir: './dist'
+          publish-dir: ./dist
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy from GitHub Actions"
+          deploy-message: Deploy from GitHub Actions
           enable-pull-request-comment: false
           enable-commit-comment: true
           overwrites-pull-request-comment: true

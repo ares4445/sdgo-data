@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /* eslint-disable no-console */
-import { useLoadingBar } from 'naive-ui';
+import { useLoadingBar } from 'naive-ui'
 import type { definitions } from 'types/supabase'
 import { Unit } from '~/models/unit'
 import { Weapon } from '~/models/weapon'

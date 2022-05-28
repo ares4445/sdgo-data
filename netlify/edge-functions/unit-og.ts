@@ -26,14 +26,10 @@ export default async (req: Request, ctx: Context): Promise<Response> => {
   head.append(`<meta property="og:image" content="${url.origin}/sgnoodles/units/${id}-1.png">`)
   head.append(`<meta property="og:description" content="ID: ${id}, Rank: ${rankDisplay}">`)
 
-  ctx.log('page', $.html())
-
   return new Response($.html(), res)
 }
 
 async function getUnitInfo(id: string | number) {
-  console.log(Deno.env.toObject())
-
   const supabase = createClient(
     Deno.env.get('VITE_SUPABASE_URL') ?? '',
     Deno.env.get('VITE_SUPABASE_ANON_KEY') ?? '',

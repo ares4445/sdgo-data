@@ -4,461 +4,461 @@
  */
 
 export interface paths {
-  "/": {
+  '/': {
     get: {
       responses: {
         /** OK */
-        200: unknown;
-      };
-    };
-  };
-  "/servers": {
+        200: unknown
+      }
+    }
+  }
+  '/servers': {
     get: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.servers.id"];
-          name?: parameters["rowFilter.servers.name"];
+          id?: parameters['rowFilter.servers.id']
+          name?: parameters['rowFilter.servers.name']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["servers"][];
-        };
+          schema: definitions['servers'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** servers */
-          servers?: definitions["servers"];
-        };
+          servers?: definitions['servers']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.servers.id"];
-          name?: parameters["rowFilter.servers.name"];
-        };
+          id?: parameters['rowFilter.servers.id']
+          name?: parameters['rowFilter.servers.name']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.servers.id"];
-          name?: parameters["rowFilter.servers.name"];
-        };
+          id?: parameters['rowFilter.servers.id']
+          name?: parameters['rowFilter.servers.name']
+        }
         body: {
           /** servers */
-          servers?: definitions["servers"];
-        };
+          servers?: definitions['servers']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/units": {
+        204: never
+      }
+    }
+  }
+  '/units': {
     get: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.units.id"];
-          unit_id?: parameters["rowFilter.units.unit_id"];
-          server_id?: parameters["rowFilter.units.server_id"];
-          is_hidden?: parameters["rowFilter.units.is_hidden"];
-          is_inverse?: parameters["rowFilter.units.is_inverse"];
-          parent_unit_id?: parameters["rowFilter.units.parent_unit_id"];
-          name1?: parameters["rowFilter.units.name1"];
-          name2?: parameters["rowFilter.units.name2"];
-          name3?: parameters["rowFilter.units.name3"];
-          is_ma?: parameters["rowFilter.units.is_ma"];
-          force1?: parameters["rowFilter.units.force1"];
-          force2?: parameters["rowFilter.units.force2"];
-          rank?: parameters["rowFilter.units.rank"];
-          rank_suf?: parameters["rowFilter.units.rank_suf"];
-          range_type?: parameters["rowFilter.units.range_type"];
-          hp?: parameters["rowFilter.units.hp"];
-          shield?: parameters["rowFilter.units.shield"];
-          shield_type?: parameters["rowFilter.units.shield_type"];
-          shield_percent?: parameters["rowFilter.units.shield_percent"];
-          shield_dir_w1?: parameters["rowFilter.units.shield_dir_w1"];
-          shield_dir_w2?: parameters["rowFilter.units.shield_dir_w2"];
-          shield_dir_w3?: parameters["rowFilter.units.shield_dir_w3"];
-          shield_dir_w4?: parameters["rowFilter.units.shield_dir_w4"];
-          shield_dir_w5?: parameters["rowFilter.units.shield_dir_w5"];
-          speed?: parameters["rowFilter.units.speed"];
-          agility?: parameters["rowFilter.units.agility"];
-          boost?: parameters["rowFilter.units.boost"];
-          attack?: parameters["rowFilter.units.attack"];
-          defense?: parameters["rowFilter.units.defense"];
-          search_distance?: parameters["rowFilter.units.search_distance"];
-          spr1?: parameters["rowFilter.units.spr1"];
-          spr2?: parameters["rowFilter.units.spr2"];
-          inverse_id?: parameters["rowFilter.units.inverse_id"];
-          inverse_trigger?: parameters["rowFilter.units.inverse_trigger"];
+          id?: parameters['rowFilter.units.id']
+          unit_id?: parameters['rowFilter.units.unit_id']
+          server_id?: parameters['rowFilter.units.server_id']
+          is_hidden?: parameters['rowFilter.units.is_hidden']
+          is_inverse?: parameters['rowFilter.units.is_inverse']
+          parent_unit_id?: parameters['rowFilter.units.parent_unit_id']
+          name1?: parameters['rowFilter.units.name1']
+          name2?: parameters['rowFilter.units.name2']
+          name3?: parameters['rowFilter.units.name3']
+          is_ma?: parameters['rowFilter.units.is_ma']
+          force1?: parameters['rowFilter.units.force1']
+          force2?: parameters['rowFilter.units.force2']
+          rank?: parameters['rowFilter.units.rank']
+          rank_suf?: parameters['rowFilter.units.rank_suf']
+          range_type?: parameters['rowFilter.units.range_type']
+          hp?: parameters['rowFilter.units.hp']
+          shield?: parameters['rowFilter.units.shield']
+          shield_type?: parameters['rowFilter.units.shield_type']
+          shield_percent?: parameters['rowFilter.units.shield_percent']
+          shield_dir_w1?: parameters['rowFilter.units.shield_dir_w1']
+          shield_dir_w2?: parameters['rowFilter.units.shield_dir_w2']
+          shield_dir_w3?: parameters['rowFilter.units.shield_dir_w3']
+          shield_dir_w4?: parameters['rowFilter.units.shield_dir_w4']
+          shield_dir_w5?: parameters['rowFilter.units.shield_dir_w5']
+          speed?: parameters['rowFilter.units.speed']
+          agility?: parameters['rowFilter.units.agility']
+          boost?: parameters['rowFilter.units.boost']
+          attack?: parameters['rowFilter.units.attack']
+          defense?: parameters['rowFilter.units.defense']
+          search_distance?: parameters['rowFilter.units.search_distance']
+          spr1?: parameters['rowFilter.units.spr1']
+          spr2?: parameters['rowFilter.units.spr2']
+          inverse_id?: parameters['rowFilter.units.inverse_id']
+          inverse_trigger?: parameters['rowFilter.units.inverse_trigger']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["units"][];
-        };
+          schema: definitions['units'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** units */
-          units?: definitions["units"];
-        };
+          units?: definitions['units']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.units.id"];
-          unit_id?: parameters["rowFilter.units.unit_id"];
-          server_id?: parameters["rowFilter.units.server_id"];
-          is_hidden?: parameters["rowFilter.units.is_hidden"];
-          is_inverse?: parameters["rowFilter.units.is_inverse"];
-          parent_unit_id?: parameters["rowFilter.units.parent_unit_id"];
-          name1?: parameters["rowFilter.units.name1"];
-          name2?: parameters["rowFilter.units.name2"];
-          name3?: parameters["rowFilter.units.name3"];
-          is_ma?: parameters["rowFilter.units.is_ma"];
-          force1?: parameters["rowFilter.units.force1"];
-          force2?: parameters["rowFilter.units.force2"];
-          rank?: parameters["rowFilter.units.rank"];
-          rank_suf?: parameters["rowFilter.units.rank_suf"];
-          range_type?: parameters["rowFilter.units.range_type"];
-          hp?: parameters["rowFilter.units.hp"];
-          shield?: parameters["rowFilter.units.shield"];
-          shield_type?: parameters["rowFilter.units.shield_type"];
-          shield_percent?: parameters["rowFilter.units.shield_percent"];
-          shield_dir_w1?: parameters["rowFilter.units.shield_dir_w1"];
-          shield_dir_w2?: parameters["rowFilter.units.shield_dir_w2"];
-          shield_dir_w3?: parameters["rowFilter.units.shield_dir_w3"];
-          shield_dir_w4?: parameters["rowFilter.units.shield_dir_w4"];
-          shield_dir_w5?: parameters["rowFilter.units.shield_dir_w5"];
-          speed?: parameters["rowFilter.units.speed"];
-          agility?: parameters["rowFilter.units.agility"];
-          boost?: parameters["rowFilter.units.boost"];
-          attack?: parameters["rowFilter.units.attack"];
-          defense?: parameters["rowFilter.units.defense"];
-          search_distance?: parameters["rowFilter.units.search_distance"];
-          spr1?: parameters["rowFilter.units.spr1"];
-          spr2?: parameters["rowFilter.units.spr2"];
-          inverse_id?: parameters["rowFilter.units.inverse_id"];
-          inverse_trigger?: parameters["rowFilter.units.inverse_trigger"];
-        };
+          id?: parameters['rowFilter.units.id']
+          unit_id?: parameters['rowFilter.units.unit_id']
+          server_id?: parameters['rowFilter.units.server_id']
+          is_hidden?: parameters['rowFilter.units.is_hidden']
+          is_inverse?: parameters['rowFilter.units.is_inverse']
+          parent_unit_id?: parameters['rowFilter.units.parent_unit_id']
+          name1?: parameters['rowFilter.units.name1']
+          name2?: parameters['rowFilter.units.name2']
+          name3?: parameters['rowFilter.units.name3']
+          is_ma?: parameters['rowFilter.units.is_ma']
+          force1?: parameters['rowFilter.units.force1']
+          force2?: parameters['rowFilter.units.force2']
+          rank?: parameters['rowFilter.units.rank']
+          rank_suf?: parameters['rowFilter.units.rank_suf']
+          range_type?: parameters['rowFilter.units.range_type']
+          hp?: parameters['rowFilter.units.hp']
+          shield?: parameters['rowFilter.units.shield']
+          shield_type?: parameters['rowFilter.units.shield_type']
+          shield_percent?: parameters['rowFilter.units.shield_percent']
+          shield_dir_w1?: parameters['rowFilter.units.shield_dir_w1']
+          shield_dir_w2?: parameters['rowFilter.units.shield_dir_w2']
+          shield_dir_w3?: parameters['rowFilter.units.shield_dir_w3']
+          shield_dir_w4?: parameters['rowFilter.units.shield_dir_w4']
+          shield_dir_w5?: parameters['rowFilter.units.shield_dir_w5']
+          speed?: parameters['rowFilter.units.speed']
+          agility?: parameters['rowFilter.units.agility']
+          boost?: parameters['rowFilter.units.boost']
+          attack?: parameters['rowFilter.units.attack']
+          defense?: parameters['rowFilter.units.defense']
+          search_distance?: parameters['rowFilter.units.search_distance']
+          spr1?: parameters['rowFilter.units.spr1']
+          spr2?: parameters['rowFilter.units.spr2']
+          inverse_id?: parameters['rowFilter.units.inverse_id']
+          inverse_trigger?: parameters['rowFilter.units.inverse_trigger']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.units.id"];
-          unit_id?: parameters["rowFilter.units.unit_id"];
-          server_id?: parameters["rowFilter.units.server_id"];
-          is_hidden?: parameters["rowFilter.units.is_hidden"];
-          is_inverse?: parameters["rowFilter.units.is_inverse"];
-          parent_unit_id?: parameters["rowFilter.units.parent_unit_id"];
-          name1?: parameters["rowFilter.units.name1"];
-          name2?: parameters["rowFilter.units.name2"];
-          name3?: parameters["rowFilter.units.name3"];
-          is_ma?: parameters["rowFilter.units.is_ma"];
-          force1?: parameters["rowFilter.units.force1"];
-          force2?: parameters["rowFilter.units.force2"];
-          rank?: parameters["rowFilter.units.rank"];
-          rank_suf?: parameters["rowFilter.units.rank_suf"];
-          range_type?: parameters["rowFilter.units.range_type"];
-          hp?: parameters["rowFilter.units.hp"];
-          shield?: parameters["rowFilter.units.shield"];
-          shield_type?: parameters["rowFilter.units.shield_type"];
-          shield_percent?: parameters["rowFilter.units.shield_percent"];
-          shield_dir_w1?: parameters["rowFilter.units.shield_dir_w1"];
-          shield_dir_w2?: parameters["rowFilter.units.shield_dir_w2"];
-          shield_dir_w3?: parameters["rowFilter.units.shield_dir_w3"];
-          shield_dir_w4?: parameters["rowFilter.units.shield_dir_w4"];
-          shield_dir_w5?: parameters["rowFilter.units.shield_dir_w5"];
-          speed?: parameters["rowFilter.units.speed"];
-          agility?: parameters["rowFilter.units.agility"];
-          boost?: parameters["rowFilter.units.boost"];
-          attack?: parameters["rowFilter.units.attack"];
-          defense?: parameters["rowFilter.units.defense"];
-          search_distance?: parameters["rowFilter.units.search_distance"];
-          spr1?: parameters["rowFilter.units.spr1"];
-          spr2?: parameters["rowFilter.units.spr2"];
-          inverse_id?: parameters["rowFilter.units.inverse_id"];
-          inverse_trigger?: parameters["rowFilter.units.inverse_trigger"];
-        };
+          id?: parameters['rowFilter.units.id']
+          unit_id?: parameters['rowFilter.units.unit_id']
+          server_id?: parameters['rowFilter.units.server_id']
+          is_hidden?: parameters['rowFilter.units.is_hidden']
+          is_inverse?: parameters['rowFilter.units.is_inverse']
+          parent_unit_id?: parameters['rowFilter.units.parent_unit_id']
+          name1?: parameters['rowFilter.units.name1']
+          name2?: parameters['rowFilter.units.name2']
+          name3?: parameters['rowFilter.units.name3']
+          is_ma?: parameters['rowFilter.units.is_ma']
+          force1?: parameters['rowFilter.units.force1']
+          force2?: parameters['rowFilter.units.force2']
+          rank?: parameters['rowFilter.units.rank']
+          rank_suf?: parameters['rowFilter.units.rank_suf']
+          range_type?: parameters['rowFilter.units.range_type']
+          hp?: parameters['rowFilter.units.hp']
+          shield?: parameters['rowFilter.units.shield']
+          shield_type?: parameters['rowFilter.units.shield_type']
+          shield_percent?: parameters['rowFilter.units.shield_percent']
+          shield_dir_w1?: parameters['rowFilter.units.shield_dir_w1']
+          shield_dir_w2?: parameters['rowFilter.units.shield_dir_w2']
+          shield_dir_w3?: parameters['rowFilter.units.shield_dir_w3']
+          shield_dir_w4?: parameters['rowFilter.units.shield_dir_w4']
+          shield_dir_w5?: parameters['rowFilter.units.shield_dir_w5']
+          speed?: parameters['rowFilter.units.speed']
+          agility?: parameters['rowFilter.units.agility']
+          boost?: parameters['rowFilter.units.boost']
+          attack?: parameters['rowFilter.units.attack']
+          defense?: parameters['rowFilter.units.defense']
+          search_distance?: parameters['rowFilter.units.search_distance']
+          spr1?: parameters['rowFilter.units.spr1']
+          spr2?: parameters['rowFilter.units.spr2']
+          inverse_id?: parameters['rowFilter.units.inverse_id']
+          inverse_trigger?: parameters['rowFilter.units.inverse_trigger']
+        }
         body: {
           /** units */
-          units?: definitions["units"];
-        };
+          units?: definitions['units']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/weapons": {
+        204: never
+      }
+    }
+  }
+  '/weapons': {
     get: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.weapons.id"];
-          weapon_id?: parameters["rowFilter.weapons.weapon_id"];
-          parent_unit_id?: parameters["rowFilter.weapons.parent_unit_id"];
-          slot?: parameters["rowFilter.weapons.slot"];
-          weapon_name?: parameters["rowFilter.weapons.weapon_name"];
-          weapon_type?: parameters["rowFilter.weapons.weapon_type"];
-          range_type?: parameters["rowFilter.weapons.range_type"];
-          damage_type?: parameters["rowFilter.weapons.damage_type"];
-          damage?: parameters["rowFilter.weapons.damage"];
-          projectile_speed?: parameters["rowFilter.weapons.projectile_speed"];
-          weapon_range?: parameters["rowFilter.weapons.weapon_range"];
-          animation_speed?: parameters["rowFilter.weapons.animation_speed"];
-          no_melee_dash?: parameters["rowFilter.weapons.no_melee_dash"];
-          no_continuous_reload?: parameters["rowFilter.weapons.no_continuous_reload"];
-          ammo?: parameters["rowFilter.weapons.ammo"];
-          reload?: parameters["rowFilter.weapons.reload"];
-          interval?: parameters["rowFilter.weapons.interval"];
-          effect_id?: parameters["rowFilter.weapons.effect_id"];
-          is_knockdown_lasthit_diff?: parameters["rowFilter.weapons.is_knockdown_lasthit_diff"];
-          knockdown?: parameters["rowFilter.weapons.knockdown"];
-          knockdown_lasthit?: parameters["rowFilter.weapons.knockdown_lasthit"];
-          is_pierce?: parameters["rowFilter.weapons.is_pierce"];
-          pierce_percent?: parameters["rowFilter.weapons.pierce_percent"];
-          can_move?: parameters["rowFilter.weapons.can_move"];
-          hitbox_x?: parameters["rowFilter.weapons.hitbox_x"];
-          hitbox_y?: parameters["rowFilter.weapons.hitbox_y"];
-          hitbox_z?: parameters["rowFilter.weapons.hitbox_z"];
-          hitbox_splash?: parameters["rowFilter.weapons.hitbox_splash"];
-          shots?: parameters["rowFilter.weapons.shots"];
+          id?: parameters['rowFilter.weapons.id']
+          weapon_id?: parameters['rowFilter.weapons.weapon_id']
+          parent_unit_id?: parameters['rowFilter.weapons.parent_unit_id']
+          slot?: parameters['rowFilter.weapons.slot']
+          weapon_name?: parameters['rowFilter.weapons.weapon_name']
+          weapon_type?: parameters['rowFilter.weapons.weapon_type']
+          range_type?: parameters['rowFilter.weapons.range_type']
+          damage_type?: parameters['rowFilter.weapons.damage_type']
+          damage?: parameters['rowFilter.weapons.damage']
+          projectile_speed?: parameters['rowFilter.weapons.projectile_speed']
+          weapon_range?: parameters['rowFilter.weapons.weapon_range']
+          animation_speed?: parameters['rowFilter.weapons.animation_speed']
+          no_melee_dash?: parameters['rowFilter.weapons.no_melee_dash']
+          no_continuous_reload?: parameters['rowFilter.weapons.no_continuous_reload']
+          ammo?: parameters['rowFilter.weapons.ammo']
+          reload?: parameters['rowFilter.weapons.reload']
+          interval?: parameters['rowFilter.weapons.interval']
+          effect_id?: parameters['rowFilter.weapons.effect_id']
+          is_knockdown_lasthit_diff?: parameters['rowFilter.weapons.is_knockdown_lasthit_diff']
+          knockdown?: parameters['rowFilter.weapons.knockdown']
+          knockdown_lasthit?: parameters['rowFilter.weapons.knockdown_lasthit']
+          is_pierce?: parameters['rowFilter.weapons.is_pierce']
+          pierce_percent?: parameters['rowFilter.weapons.pierce_percent']
+          can_move?: parameters['rowFilter.weapons.can_move']
+          hitbox_x?: parameters['rowFilter.weapons.hitbox_x']
+          hitbox_y?: parameters['rowFilter.weapons.hitbox_y']
+          hitbox_z?: parameters['rowFilter.weapons.hitbox_z']
+          hitbox_splash?: parameters['rowFilter.weapons.hitbox_splash']
+          shots?: parameters['rowFilter.weapons.shots']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["weapons"][];
-        };
+          schema: definitions['weapons'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** weapons */
-          weapons?: definitions["weapons"];
-        };
+          weapons?: definitions['weapons']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.weapons.id"];
-          weapon_id?: parameters["rowFilter.weapons.weapon_id"];
-          parent_unit_id?: parameters["rowFilter.weapons.parent_unit_id"];
-          slot?: parameters["rowFilter.weapons.slot"];
-          weapon_name?: parameters["rowFilter.weapons.weapon_name"];
-          weapon_type?: parameters["rowFilter.weapons.weapon_type"];
-          range_type?: parameters["rowFilter.weapons.range_type"];
-          damage_type?: parameters["rowFilter.weapons.damage_type"];
-          damage?: parameters["rowFilter.weapons.damage"];
-          projectile_speed?: parameters["rowFilter.weapons.projectile_speed"];
-          weapon_range?: parameters["rowFilter.weapons.weapon_range"];
-          animation_speed?: parameters["rowFilter.weapons.animation_speed"];
-          no_melee_dash?: parameters["rowFilter.weapons.no_melee_dash"];
-          no_continuous_reload?: parameters["rowFilter.weapons.no_continuous_reload"];
-          ammo?: parameters["rowFilter.weapons.ammo"];
-          reload?: parameters["rowFilter.weapons.reload"];
-          interval?: parameters["rowFilter.weapons.interval"];
-          effect_id?: parameters["rowFilter.weapons.effect_id"];
-          is_knockdown_lasthit_diff?: parameters["rowFilter.weapons.is_knockdown_lasthit_diff"];
-          knockdown?: parameters["rowFilter.weapons.knockdown"];
-          knockdown_lasthit?: parameters["rowFilter.weapons.knockdown_lasthit"];
-          is_pierce?: parameters["rowFilter.weapons.is_pierce"];
-          pierce_percent?: parameters["rowFilter.weapons.pierce_percent"];
-          can_move?: parameters["rowFilter.weapons.can_move"];
-          hitbox_x?: parameters["rowFilter.weapons.hitbox_x"];
-          hitbox_y?: parameters["rowFilter.weapons.hitbox_y"];
-          hitbox_z?: parameters["rowFilter.weapons.hitbox_z"];
-          hitbox_splash?: parameters["rowFilter.weapons.hitbox_splash"];
-          shots?: parameters["rowFilter.weapons.shots"];
-        };
+          id?: parameters['rowFilter.weapons.id']
+          weapon_id?: parameters['rowFilter.weapons.weapon_id']
+          parent_unit_id?: parameters['rowFilter.weapons.parent_unit_id']
+          slot?: parameters['rowFilter.weapons.slot']
+          weapon_name?: parameters['rowFilter.weapons.weapon_name']
+          weapon_type?: parameters['rowFilter.weapons.weapon_type']
+          range_type?: parameters['rowFilter.weapons.range_type']
+          damage_type?: parameters['rowFilter.weapons.damage_type']
+          damage?: parameters['rowFilter.weapons.damage']
+          projectile_speed?: parameters['rowFilter.weapons.projectile_speed']
+          weapon_range?: parameters['rowFilter.weapons.weapon_range']
+          animation_speed?: parameters['rowFilter.weapons.animation_speed']
+          no_melee_dash?: parameters['rowFilter.weapons.no_melee_dash']
+          no_continuous_reload?: parameters['rowFilter.weapons.no_continuous_reload']
+          ammo?: parameters['rowFilter.weapons.ammo']
+          reload?: parameters['rowFilter.weapons.reload']
+          interval?: parameters['rowFilter.weapons.interval']
+          effect_id?: parameters['rowFilter.weapons.effect_id']
+          is_knockdown_lasthit_diff?: parameters['rowFilter.weapons.is_knockdown_lasthit_diff']
+          knockdown?: parameters['rowFilter.weapons.knockdown']
+          knockdown_lasthit?: parameters['rowFilter.weapons.knockdown_lasthit']
+          is_pierce?: parameters['rowFilter.weapons.is_pierce']
+          pierce_percent?: parameters['rowFilter.weapons.pierce_percent']
+          can_move?: parameters['rowFilter.weapons.can_move']
+          hitbox_x?: parameters['rowFilter.weapons.hitbox_x']
+          hitbox_y?: parameters['rowFilter.weapons.hitbox_y']
+          hitbox_z?: parameters['rowFilter.weapons.hitbox_z']
+          hitbox_splash?: parameters['rowFilter.weapons.hitbox_splash']
+          shots?: parameters['rowFilter.weapons.shots']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.weapons.id"];
-          weapon_id?: parameters["rowFilter.weapons.weapon_id"];
-          parent_unit_id?: parameters["rowFilter.weapons.parent_unit_id"];
-          slot?: parameters["rowFilter.weapons.slot"];
-          weapon_name?: parameters["rowFilter.weapons.weapon_name"];
-          weapon_type?: parameters["rowFilter.weapons.weapon_type"];
-          range_type?: parameters["rowFilter.weapons.range_type"];
-          damage_type?: parameters["rowFilter.weapons.damage_type"];
-          damage?: parameters["rowFilter.weapons.damage"];
-          projectile_speed?: parameters["rowFilter.weapons.projectile_speed"];
-          weapon_range?: parameters["rowFilter.weapons.weapon_range"];
-          animation_speed?: parameters["rowFilter.weapons.animation_speed"];
-          no_melee_dash?: parameters["rowFilter.weapons.no_melee_dash"];
-          no_continuous_reload?: parameters["rowFilter.weapons.no_continuous_reload"];
-          ammo?: parameters["rowFilter.weapons.ammo"];
-          reload?: parameters["rowFilter.weapons.reload"];
-          interval?: parameters["rowFilter.weapons.interval"];
-          effect_id?: parameters["rowFilter.weapons.effect_id"];
-          is_knockdown_lasthit_diff?: parameters["rowFilter.weapons.is_knockdown_lasthit_diff"];
-          knockdown?: parameters["rowFilter.weapons.knockdown"];
-          knockdown_lasthit?: parameters["rowFilter.weapons.knockdown_lasthit"];
-          is_pierce?: parameters["rowFilter.weapons.is_pierce"];
-          pierce_percent?: parameters["rowFilter.weapons.pierce_percent"];
-          can_move?: parameters["rowFilter.weapons.can_move"];
-          hitbox_x?: parameters["rowFilter.weapons.hitbox_x"];
-          hitbox_y?: parameters["rowFilter.weapons.hitbox_y"];
-          hitbox_z?: parameters["rowFilter.weapons.hitbox_z"];
-          hitbox_splash?: parameters["rowFilter.weapons.hitbox_splash"];
-          shots?: parameters["rowFilter.weapons.shots"];
-        };
+          id?: parameters['rowFilter.weapons.id']
+          weapon_id?: parameters['rowFilter.weapons.weapon_id']
+          parent_unit_id?: parameters['rowFilter.weapons.parent_unit_id']
+          slot?: parameters['rowFilter.weapons.slot']
+          weapon_name?: parameters['rowFilter.weapons.weapon_name']
+          weapon_type?: parameters['rowFilter.weapons.weapon_type']
+          range_type?: parameters['rowFilter.weapons.range_type']
+          damage_type?: parameters['rowFilter.weapons.damage_type']
+          damage?: parameters['rowFilter.weapons.damage']
+          projectile_speed?: parameters['rowFilter.weapons.projectile_speed']
+          weapon_range?: parameters['rowFilter.weapons.weapon_range']
+          animation_speed?: parameters['rowFilter.weapons.animation_speed']
+          no_melee_dash?: parameters['rowFilter.weapons.no_melee_dash']
+          no_continuous_reload?: parameters['rowFilter.weapons.no_continuous_reload']
+          ammo?: parameters['rowFilter.weapons.ammo']
+          reload?: parameters['rowFilter.weapons.reload']
+          interval?: parameters['rowFilter.weapons.interval']
+          effect_id?: parameters['rowFilter.weapons.effect_id']
+          is_knockdown_lasthit_diff?: parameters['rowFilter.weapons.is_knockdown_lasthit_diff']
+          knockdown?: parameters['rowFilter.weapons.knockdown']
+          knockdown_lasthit?: parameters['rowFilter.weapons.knockdown_lasthit']
+          is_pierce?: parameters['rowFilter.weapons.is_pierce']
+          pierce_percent?: parameters['rowFilter.weapons.pierce_percent']
+          can_move?: parameters['rowFilter.weapons.can_move']
+          hitbox_x?: parameters['rowFilter.weapons.hitbox_x']
+          hitbox_y?: parameters['rowFilter.weapons.hitbox_y']
+          hitbox_z?: parameters['rowFilter.weapons.hitbox_z']
+          hitbox_splash?: parameters['rowFilter.weapons.hitbox_splash']
+          shots?: parameters['rowFilter.weapons.shots']
+        }
         body: {
           /** weapons */
-          weapons?: definitions["weapons"];
-        };
+          weapons?: definitions['weapons']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
+        204: never
+      }
+    }
+  }
 }
 
 export interface definitions {
@@ -468,148 +468,148 @@ export interface definitions {
      * @description Note:
      * This is a Primary Key.<pk/>
      */
-    id: number;
+    id: number
     /** Format: text */
-    name: string;
-  };
+    name: string
+  }
   units: {
     /**
      * Format: integer
      * @description Note:
      * This is a Primary Key.<pk/>
      */
-    id: number;
+    id: number
     /** Format: integer */
-    unit_id: number;
+    unit_id: number
     /** Format: integer */
-    server_id: number;
+    server_id: number
     /** Format: smallint */
-    is_hidden: number;
+    is_hidden: number
     /** Format: smallint */
-    is_inverse: number;
+    is_inverse: number
     /** Format: integer */
-    parent_unit_id?: number;
+    parent_unit_id?: number
     /** Format: text */
-    name1: string;
+    name1: string
     /** Format: text */
-    name2: string;
+    name2: string
     /** Format: text */
-    name3: string;
+    name3: string
     /** Format: smallint */
-    is_ma: number;
+    is_ma: number
     /** Format: smallint */
-    force1: number;
+    force1: number
     /** Format: smallint */
-    force2: number;
+    force2: number
     /** Format: smallint */
-    rank: number;
+    rank: number
     /** Format: smallint */
-    rank_suf: number;
+    rank_suf: number
     /** Format: smallint */
-    range_type: number;
+    range_type: number
     /** Format: integer */
-    hp: number;
+    hp: number
     /** Format: integer */
-    shield: number;
+    shield: number
     /** Format: smallint */
-    shield_type: number;
+    shield_type: number
     /** Format: integer */
-    shield_percent: number;
+    shield_percent: number
     /** Format: smallint */
-    shield_dir_w1: number;
+    shield_dir_w1: number
     /** Format: smallint */
-    shield_dir_w2: number;
+    shield_dir_w2: number
     /** Format: smallint */
-    shield_dir_w3: number;
+    shield_dir_w3: number
     /** Format: smallint */
-    shield_dir_w4: number;
+    shield_dir_w4: number
     /** Format: smallint */
-    shield_dir_w5: number;
+    shield_dir_w5: number
     /** Format: smallint */
-    speed: number;
+    speed: number
     /** Format: smallint */
-    agility: number;
+    agility: number
     /** Format: smallint */
-    boost: number;
+    boost: number
     /** Format: smallint */
-    attack: number;
+    attack: number
     /** Format: smallint */
-    defense: number;
+    defense: number
     /** Format: smallint */
-    search_distance: number;
+    search_distance: number
     /** Format: text */
-    spr1?: string;
+    spr1?: string
     /** Format: text */
-    spr2?: string;
+    spr2?: string
     /** Format: integer */
-    inverse_id?: number;
+    inverse_id?: number
     /** Format: smallint */
-    inverse_trigger?: number;
-  };
+    inverse_trigger?: number
+  }
   weapons: {
     /**
      * Format: integer
      * @description Note:
      * This is a Primary Key.<pk/>
      */
-    id: number;
+    id: number
     /** Format: integer */
-    weapon_id: number;
+    weapon_id: number
     /** Format: integer */
-    parent_unit_id: number;
+    parent_unit_id: number
     /** Format: smallint */
-    slot: number;
+    slot: number
     /** Format: text */
-    weapon_name: string;
+    weapon_name: string
     /** Format: smallint */
-    weapon_type: number;
+    weapon_type: number
     /** Format: smallint */
-    range_type: number;
+    range_type: number
     /** Format: smallint */
-    damage_type: number;
+    damage_type: number
     /** Format: integer */
-    damage: number;
+    damage: number
     /** Format: smallint */
-    projectile_speed: number;
+    projectile_speed: number
     /** Format: smallint */
-    weapon_range: number;
+    weapon_range: number
     /** Format: double precision */
-    animation_speed: number;
+    animation_speed: number
     /** Format: smallint */
-    no_melee_dash: number;
+    no_melee_dash: number
     /** Format: smallint */
-    no_continuous_reload: number;
+    no_continuous_reload: number
     /** Format: smallint */
-    ammo: number;
+    ammo: number
     /** Format: smallint */
-    reload: number;
+    reload: number
     /** Format: smallint */
-    interval: number;
+    interval: number
     /** Format: integer */
-    effect_id: number;
+    effect_id: number
     /** Format: smallint */
-    is_knockdown_lasthit_diff: number;
+    is_knockdown_lasthit_diff: number
     /** Format: smallint */
-    knockdown: number;
+    knockdown: number
     /** Format: smallint */
-    knockdown_lasthit: number;
+    knockdown_lasthit: number
     /** Format: smallint */
-    is_pierce: number;
+    is_pierce: number
     /** Format: smallint */
-    pierce_percent: number;
+    pierce_percent: number
     /** Format: smallint */
-    can_move: number;
+    can_move: number
     /** Format: double precision */
-    hitbox_x: number;
+    hitbox_x: number
     /** Format: double precision */
-    hitbox_y: number;
+    hitbox_y: number
     /** Format: double precision */
-    hitbox_z: number;
+    hitbox_z: number
     /** Format: double precision */
-    hitbox_splash: number;
+    hitbox_splash: number
     /** Format: smallint */
-    shots: number;
-  };
+    shots: number
+  }
 }
 
 export interface parameters {
@@ -617,170 +617,170 @@ export interface parameters {
    * @description Preference
    * @enum {string}
    */
-  preferParams: "params=single-object";
+  preferParams: 'params=single-object'
   /**
    * @description Preference
    * @enum {string}
    */
-  preferReturn: "return=representation" | "return=minimal" | "return=none";
+  preferReturn: 'return=representation' | 'return=minimal' | 'return=none'
   /**
    * @description Preference
    * @enum {string}
    */
-  preferCount: "count=none";
+  preferCount: 'count=none'
   /** @description Filtering Columns */
-  select: string;
+  select: string
   /** @description On Conflict */
-  on_conflict: string;
+  on_conflict: string
   /** @description Ordering */
-  order: string;
+  order: string
   /** @description Limiting and Pagination */
-  range: string;
+  range: string
   /**
    * @description Limiting and Pagination
    * @default items
    */
-  rangeUnit: string;
+  rangeUnit: string
   /** @description Limiting and Pagination */
-  offset: string;
+  offset: string
   /** @description Limiting and Pagination */
-  limit: string;
+  limit: string
   /** @description servers */
-  "body.servers": definitions["servers"];
+  'body.servers': definitions['servers']
   /** Format: integer */
-  "rowFilter.servers.id": string;
+  'rowFilter.servers.id': string
   /** Format: text */
-  "rowFilter.servers.name": string;
+  'rowFilter.servers.name': string
   /** @description units */
-  "body.units": definitions["units"];
+  'body.units': definitions['units']
   /** Format: integer */
-  "rowFilter.units.id": string;
+  'rowFilter.units.id': string
   /** Format: integer */
-  "rowFilter.units.unit_id": string;
+  'rowFilter.units.unit_id': string
   /** Format: integer */
-  "rowFilter.units.server_id": string;
+  'rowFilter.units.server_id': string
   /** Format: smallint */
-  "rowFilter.units.is_hidden": string;
+  'rowFilter.units.is_hidden': string
   /** Format: smallint */
-  "rowFilter.units.is_inverse": string;
+  'rowFilter.units.is_inverse': string
   /** Format: integer */
-  "rowFilter.units.parent_unit_id": string;
+  'rowFilter.units.parent_unit_id': string
   /** Format: text */
-  "rowFilter.units.name1": string;
+  'rowFilter.units.name1': string
   /** Format: text */
-  "rowFilter.units.name2": string;
+  'rowFilter.units.name2': string
   /** Format: text */
-  "rowFilter.units.name3": string;
+  'rowFilter.units.name3': string
   /** Format: smallint */
-  "rowFilter.units.is_ma": string;
+  'rowFilter.units.is_ma': string
   /** Format: smallint */
-  "rowFilter.units.force1": string;
+  'rowFilter.units.force1': string
   /** Format: smallint */
-  "rowFilter.units.force2": string;
+  'rowFilter.units.force2': string
   /** Format: smallint */
-  "rowFilter.units.rank": string;
+  'rowFilter.units.rank': string
   /** Format: smallint */
-  "rowFilter.units.rank_suf": string;
+  'rowFilter.units.rank_suf': string
   /** Format: smallint */
-  "rowFilter.units.range_type": string;
+  'rowFilter.units.range_type': string
   /** Format: integer */
-  "rowFilter.units.hp": string;
+  'rowFilter.units.hp': string
   /** Format: integer */
-  "rowFilter.units.shield": string;
+  'rowFilter.units.shield': string
   /** Format: smallint */
-  "rowFilter.units.shield_type": string;
+  'rowFilter.units.shield_type': string
   /** Format: integer */
-  "rowFilter.units.shield_percent": string;
+  'rowFilter.units.shield_percent': string
   /** Format: smallint */
-  "rowFilter.units.shield_dir_w1": string;
+  'rowFilter.units.shield_dir_w1': string
   /** Format: smallint */
-  "rowFilter.units.shield_dir_w2": string;
+  'rowFilter.units.shield_dir_w2': string
   /** Format: smallint */
-  "rowFilter.units.shield_dir_w3": string;
+  'rowFilter.units.shield_dir_w3': string
   /** Format: smallint */
-  "rowFilter.units.shield_dir_w4": string;
+  'rowFilter.units.shield_dir_w4': string
   /** Format: smallint */
-  "rowFilter.units.shield_dir_w5": string;
+  'rowFilter.units.shield_dir_w5': string
   /** Format: smallint */
-  "rowFilter.units.speed": string;
+  'rowFilter.units.speed': string
   /** Format: smallint */
-  "rowFilter.units.agility": string;
+  'rowFilter.units.agility': string
   /** Format: smallint */
-  "rowFilter.units.boost": string;
+  'rowFilter.units.boost': string
   /** Format: smallint */
-  "rowFilter.units.attack": string;
+  'rowFilter.units.attack': string
   /** Format: smallint */
-  "rowFilter.units.defense": string;
+  'rowFilter.units.defense': string
   /** Format: smallint */
-  "rowFilter.units.search_distance": string;
+  'rowFilter.units.search_distance': string
   /** Format: text */
-  "rowFilter.units.spr1": string;
+  'rowFilter.units.spr1': string
   /** Format: text */
-  "rowFilter.units.spr2": string;
+  'rowFilter.units.spr2': string
   /** Format: integer */
-  "rowFilter.units.inverse_id": string;
+  'rowFilter.units.inverse_id': string
   /** Format: smallint */
-  "rowFilter.units.inverse_trigger": string;
+  'rowFilter.units.inverse_trigger': string
   /** @description weapons */
-  "body.weapons": definitions["weapons"];
+  'body.weapons': definitions['weapons']
   /** Format: integer */
-  "rowFilter.weapons.id": string;
+  'rowFilter.weapons.id': string
   /** Format: integer */
-  "rowFilter.weapons.weapon_id": string;
+  'rowFilter.weapons.weapon_id': string
   /** Format: integer */
-  "rowFilter.weapons.parent_unit_id": string;
+  'rowFilter.weapons.parent_unit_id': string
   /** Format: smallint */
-  "rowFilter.weapons.slot": string;
+  'rowFilter.weapons.slot': string
   /** Format: text */
-  "rowFilter.weapons.weapon_name": string;
+  'rowFilter.weapons.weapon_name': string
   /** Format: smallint */
-  "rowFilter.weapons.weapon_type": string;
+  'rowFilter.weapons.weapon_type': string
   /** Format: smallint */
-  "rowFilter.weapons.range_type": string;
+  'rowFilter.weapons.range_type': string
   /** Format: smallint */
-  "rowFilter.weapons.damage_type": string;
+  'rowFilter.weapons.damage_type': string
   /** Format: integer */
-  "rowFilter.weapons.damage": string;
+  'rowFilter.weapons.damage': string
   /** Format: smallint */
-  "rowFilter.weapons.projectile_speed": string;
+  'rowFilter.weapons.projectile_speed': string
   /** Format: smallint */
-  "rowFilter.weapons.weapon_range": string;
+  'rowFilter.weapons.weapon_range': string
   /** Format: double precision */
-  "rowFilter.weapons.animation_speed": string;
+  'rowFilter.weapons.animation_speed': string
   /** Format: smallint */
-  "rowFilter.weapons.no_melee_dash": string;
+  'rowFilter.weapons.no_melee_dash': string
   /** Format: smallint */
-  "rowFilter.weapons.no_continuous_reload": string;
+  'rowFilter.weapons.no_continuous_reload': string
   /** Format: smallint */
-  "rowFilter.weapons.ammo": string;
+  'rowFilter.weapons.ammo': string
   /** Format: smallint */
-  "rowFilter.weapons.reload": string;
+  'rowFilter.weapons.reload': string
   /** Format: smallint */
-  "rowFilter.weapons.interval": string;
+  'rowFilter.weapons.interval': string
   /** Format: integer */
-  "rowFilter.weapons.effect_id": string;
+  'rowFilter.weapons.effect_id': string
   /** Format: smallint */
-  "rowFilter.weapons.is_knockdown_lasthit_diff": string;
+  'rowFilter.weapons.is_knockdown_lasthit_diff': string
   /** Format: smallint */
-  "rowFilter.weapons.knockdown": string;
+  'rowFilter.weapons.knockdown': string
   /** Format: smallint */
-  "rowFilter.weapons.knockdown_lasthit": string;
+  'rowFilter.weapons.knockdown_lasthit': string
   /** Format: smallint */
-  "rowFilter.weapons.is_pierce": string;
+  'rowFilter.weapons.is_pierce': string
   /** Format: smallint */
-  "rowFilter.weapons.pierce_percent": string;
+  'rowFilter.weapons.pierce_percent': string
   /** Format: smallint */
-  "rowFilter.weapons.can_move": string;
+  'rowFilter.weapons.can_move': string
   /** Format: double precision */
-  "rowFilter.weapons.hitbox_x": string;
+  'rowFilter.weapons.hitbox_x': string
   /** Format: double precision */
-  "rowFilter.weapons.hitbox_y": string;
+  'rowFilter.weapons.hitbox_y': string
   /** Format: double precision */
-  "rowFilter.weapons.hitbox_z": string;
+  'rowFilter.weapons.hitbox_z': string
   /** Format: double precision */
-  "rowFilter.weapons.hitbox_splash": string;
+  'rowFilter.weapons.hitbox_splash': string
   /** Format: smallint */
-  "rowFilter.weapons.shots": string;
+  'rowFilter.weapons.shots': string
 }
 
 export interface operations {}
