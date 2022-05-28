@@ -95,34 +95,34 @@ jobs:
   #         build: pnpm run build
   #         start: npx vite --port 3333
 
-  deploy-gh-pages:
-    runs-on: ubuntu-20.04
-    permissions:
-      contents: write
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-          cache: pnpm
+  # deploy-gh-pages:
+  #   runs-on: ubuntu-20.04
+  #   permissions:
+  #     contents: write
+  #   concurrency:
+  #     group: ${{ github.workflow }}-${{ github.ref }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: pnpm/action-setup@v2
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 16.x
+  #         cache: pnpm
 
-      - name: Install
-        run: pnpm install
+  #     - name: Install
+  #       run: pnpm install
 
-      - name: Build
-        env:
-          VITE_BASE: /sdgo-data
-        run: pnpm build
+  #     - name: Build
+  #       env:
+  #         VITE_BASE: /sdgo-data
+  #       run: pnpm build
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.ref == 'refs/heads/main' }}
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+  #     - name: Deploy
+  #       uses: peaceiris/actions-gh-pages@v3
+  #       if: ${{ github.ref == 'refs/heads/main' }}
+  #       with:
+  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+  #         publish_dir: ./dist
   
   deploy-netlify:
     runs-on: ubuntu-20.04
