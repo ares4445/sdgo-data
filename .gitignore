@@ -7,3 +7,7 @@ dist-ssr
 node_modules
 .idea/
 *.log
+
+# Supabase
+**/supabase/.branches
+**/supabase/.temp

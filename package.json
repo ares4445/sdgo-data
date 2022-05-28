@@ -13,6 +13,7 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^1.35.3",
     "@vueuse/core": "^8.4.2",
     "@vueuse/head": "^0.7.6",
     "naive-ui": "^2.29.0",

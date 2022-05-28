@@ -3,7 +3,6 @@ import { darkTheme } from 'naive-ui'
 // https://github.com/vueuse/head
 // you can use this to manipulate the document head in any components,
 // they will be rendered correctly in the html results with vite-ssg
-import { useDbWorkerStore } from './stores/db'
 import { isDark, preferredDark } from '~/composables'
 
 useHead({
@@ -25,9 +24,6 @@ useHead({
 })
 
 const theme = computed(() => isDark.value ? darkTheme : null)
-
-const { createWorker } = useDbWorkerStore()
-createWorker()
 </script>
 
 <template>

@@ -126,6 +126,7 @@ jobs:
   
   deploy-netlify:
     runs-on: ubuntu-20.04
+    environment: netlify
     permissions:
       contents: write
     concurrency:

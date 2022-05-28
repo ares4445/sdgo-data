@@ -20,6 +20,10 @@ const markdownWrapperClasses = 'prose prose-sm m-auto text-left'
 export default ({ mode }: { mode: string }) => defineConfig({
   base: loadEnv(mode, process.cwd()).VITE_BASE || '/',
 
+  server: {
+    open: false,
+  },
+
   resolve: {
     alias: {
       '~/': `${path.resolve(__dirname, 'src')}/`,

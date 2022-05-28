@@ -1,3 +1,5 @@
+import type { definitions } from 'types/supabase'
+
 export type RankType = 1 | 2 | 3 | 4
 export type RankSufType = 1 | 2 | 3 | 4 | 5
 export type RangeType = 0 | 1 | 2
@@ -6,12 +8,13 @@ export type ShieldDirection = Record<
  boolean
 >
 
-export class Unit {
+export class Unit implements definitions.units {
   constructor(data: Partial<Unit>) {
     Object.assign(this, data)
   }
 
   id!: number
+  unit_id!: number
   server_id!: number
 
   name1!: String

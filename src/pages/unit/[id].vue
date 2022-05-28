@@ -1,12 +1,11 @@
 <script setup lang="ts">
 /* eslint-disable no-console */
+import type { definitions } from 'types/supabase'
 import { Unit } from '~/models/unit'
 import { Weapon } from '~/models/weapon'
-import { useDbWorkerStore } from '~/stores/db'
+import { useSupabase } from '~/stores/supabase'
 
 const props = defineProps<{ id: string }>()
-
-const workerStore = useDbWorkerStore()
 
 let units = $ref<Unit[]>([])
 let weapons = $ref<Weapon[]>([])
@@ -21,35 +20,30 @@ const weaponsView = computed(() => {
     }
   })
 
-  weapons.forEach(weapon => result[weapon.unit_id][weapon.slot] = weapon)
+  weapons.forEach(weapon => result[weapon.parent_unit_id][weapon.slot] = weapon)
 
   return result
 })
 const shield_dir_diff = computed(() => units?.[0]?.shield_dir_diff || units?.[1]?.shield_dir_diff)
 
+const { supabase } = useSupabase()
 async function query() {
-  if (workerStore.loading || workerStore.worker === undefined)
-    return
+  const { data: unitsData } = await supabase.from<definitions['units']>('units')
+    .select('*')
+    .or(`unit_id.eq.${props.id},parent_unit_id.eq.${props.id}`)
+    .order('is_inverse', { ascending: true })
+  units = unitsData!.map(record => new Unit(record))
 
-  const unitSql = `
-select * from units
-where id = ${props.id} or parent_unit_id = ${props.id}
-order by is_inverse
-`
-  units = (await workerStore.worker!.db.query(unitSql) as Partial<Unit>[])
-    .map(record => new Unit(record))
+  const unitIds = units.map(unit => unit.id)
 
-  const unitIds = units.map(unit => unit.id).join(', ')
-
-  const weaponsSql = `
-select * from weapons
-where unit_id in (${unitIds})
-order by unit_id, slot
-`
-  weapons = (await workerStore.worker!.db.query(weaponsSql) as Partial<Weapon>[])
-    .map(record => new Weapon(record))
+  const { data: weaponsData } = await supabase.from<definitions['weapons']>('weapons')
+    .select('*')
+    .in('parent_unit_id', unitIds)
+    .order('parent_unit_id')
+    .order('slot')
+  weapons = weaponsData!.map(record => new Weapon(record))
 }
-workerStore.$subscribe(() => query())
+
 onMounted(() => query())
 
 const base = `${window.location.origin}/${import.meta.env.BASE_URL}`
@@ -71,8 +65,8 @@ const image2 = computed(() => `${base}sgnoodles/units/${props.id}-2.png`)
         </div>
         <div style="font-size: 0.9em;">
           ID:
-          <span>{{ units[0].id }}(0x{{ units[0].id.toString(16) }})</span>
-          <span v-if="units.length > 1" template> / {{ units[1].id }}(0x{{ units[1].id.toString(16) }})</span>
+          <span>{{ units[0].unit_id }}(0x{{ units[0].unit_id.toString(16) }})</span>
+          <span v-if="units.length > 1" template> / {{ units[1].unit_id }}(0x{{ units[1].unit_id.toString(16) }})</span>
         </div>
         <div class="mt-1">
           Rank: {{ units[0].rank_display }}
@@ -84,7 +78,13 @@ const image2 = computed(() => `${base}sgnoodles/units/${props.id}-2.png`)
       </div>
     </div>
     <div class="table-container">
-      <table class="table text-center mt-4">
+      <n-table
+        class="table text-center mt-4" size="small"
+        :theme-overrides="{
+          thPaddingSmall: '0 4px',
+          tdPaddingSmall: '0 4px',
+        }"
+      >
         <thead>
           <tr>
             <th v-if="units.length > 1" rowspan="2" />
@@ -163,7 +163,7 @@ const image2 = computed(() => `${base}sgnoodles/units/${props.id}-2.png`)
             </template>
           </tr>
         </tbody>
-      </table>
+      </n-table>
     </div>
     <div class="weapons-grid grid grid-cols-1 mt-4">
       <template v-for="unit in units" :key="unit.id">
@@ -237,10 +237,10 @@ table {
     table-layout: fixed;
   }
 }
-th, td {
+/* th, td {
   border: 1px solid;
   padding: 0 0.5em;
-}
+} */
 
 .xs-display-none {
   display: none;

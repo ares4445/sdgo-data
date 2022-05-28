@@ -149,7 +149,7 @@ function renderStringFilterMenu<T>(
       setFilter(
         filters,
         reactiveColumn.key,
-        v ? { operator: 'LIKE', value: `"%${v}%"` } : undefined,
+        v ? { operator: 'LIKE', value: `%${v}%` } : undefined,
       )
       hide()
     },
@@ -181,7 +181,7 @@ function renderNumberFilterMenu<T>(
       setFilter(
         filters,
         reactiveColumn.key,
-        { operator, value: Array.isArray(value) ? value.join(' and ') : value },
+        { operator, value },
       )
       hide()
     },

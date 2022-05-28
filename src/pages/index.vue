@@ -3,14 +3,13 @@
 import type { DataTableBaseColumn, DataTableFilterState, DataTableSortState, PaginationProps } from 'naive-ui'
 import { NImage } from 'naive-ui'
 import { RouterLink } from 'vue-router'
-import { useDbWorkerStore } from '~/stores/db'
-import type { AppTableColumns, FiltersRef, PaginationRef, SortRef } from '~/composables'
+import type { definitions } from 'types/supabase'
+import type { AppTableColumns, Filter, FiltersRef, PaginationRef, SortRef } from '~/composables'
 import { AppTableFilterType, useDataTable } from '~/composables'
 import { Unit } from '~/models/unit'
+import { useSupabase } from '~/stores/supabase'
 
 const { t } = useI18n()
-
-const workerStore = useDbWorkerStore()
 
 let loading = $ref(true)
 let units = $ref<Unit[]>([])
@@ -19,7 +18,7 @@ const columnOptions: AppTableColumns = [
   { title: t('Rank'), key: 'rank', displayKey: 'rank_display' },
   {
     key: 'image',
-    render: row => h(NImage, { src: `${window.location.origin}/${import.meta.env.BASE_URL}sgnoodles/units/${row.parent_unit_id || row.id}-1.png`, width: 50, height: 50, objectFit: 'cover' }),
+    render: row => h(NImage, { src: `${window.location.origin}/${import.meta.env.BASE_URL}sgnoodles/units/${row.parent_unit_id || row.unit_id}-1.png`, width: 50, height: 50, objectFit: 'cover' }),
     sorter: false,
   },
   {
@@ -31,7 +30,7 @@ const columnOptions: AppTableColumns = [
     },
     filterType: AppTableFilterType.STRING,
     sorter: true,
-    render: ({ id, parent_unit_id, name1 }) => h(RouterLink, { to: `/unit/${parent_unit_id || id}`, innerHTML: name1 }),
+    render: ({ unit_id, parent_unit_id, name1 }) => h(RouterLink, { to: `/unit/${parent_unit_id || unit_id}`, innerHTML: name1 }),
   },
   { title: t('R後?'), key: 'is_inverse', displayKey: 'is_inverse_display', align: 'center' },
   { title: t('MA?'), key: 'is_ma', displayKey: 'is_ma_display', align: 'center' },
@@ -73,60 +72,78 @@ const paginationOptions: PaginationProps = {
 const { filters, sort, pagination, columns } = useDataTable({
   columnOptions,
   paginationOptions,
-  fetchFn: fetchData,
+  fetchFn: query,
 })
 
-async function fetchData(filters: FiltersRef, pagination: PaginationRef, sort: SortRef) {
-  if (workerStore.worker === null)
-    return
-
-  const worker = workerStore.worker
-
+const { supabase } = useSupabase()
+async function query(filters: FiltersRef, pagination: PaginationRef, sort: SortRef) {
   loading = true
 
-  const wheres = Object.entries({
+  let query = supabase.from<definitions['units']>('units').select('*', { count: 'exact' })
+
+  Object.entries({
     ...(filters.value),
     ...{ server_id: { operator: '=', value: 1 } },
   })
     .filter(([_, v]) => !!v)
-    .map(([field, v]) => {
-      const { operator, value } = v!
-      return `${field} ${operator} ${value}`
+    .forEach(([field, v]) => {
+      const { operator, value } = v! as Filter
+      switch (operator) {
+        case '=':
+          query = query.filter(field, 'eq', value)
+          break
+        case '<>':
+          query = query.filter(field, 'not.eq', value)
+          break
+        case '>=':
+          query = query.filter(field, 'gte', value)
+          break
+        case '>':
+          query = query.filter(field, 'gt', value)
+          break
+        case '<=':
+          query = query.filter(field, 'lte', value)
+          break
+        case '<':
+          query = query.filter(field, 'lt', value)
+          break
+        case 'LIKE':
+          query = query.ilike(field, value as string)
+          break
+        case 'BETWEEN':
+          // eslint-disable-next-line no-case-declarations
+          const values = value as unknown as number[]
+          values.sort()
+          query = query.filter(field, 'gte', values[0])
+            .filter(field, 'lte', values[1])
+          break
+      }
     })
 
-  let where = ''
-  if (wheres.length)
-    where = `where ${wheres.join(' and ')}`
-
-  let orderBy = ''
   const sortValue = sort.value
   if (sortValue && sortValue.length) {
-    const orders = sortValue.map(({ columnKey, order }) => `${columnKey} ${order === 'ascend' ? 'asc' : 'desc'}`)
-    orderBy = `order by ${orders.join(', ')}`
+    sortValue.forEach(({ columnKey, order }) => {
+      query = query.order(columnKey, { ascending: order === 'ascend' })
+    })
+  }
+  else {
+    // default sort by id
+    query = query.order('unit_id', { ascending: true })
   }
 
   const { pageSize, page } = pagination
-  const sql = `
-  select * from units
-  ${where}
-  ${orderBy}
-  limit ${pageSize} offset ${pageSize! * (page! - 1)}`
-  units = (await worker!.db.query(sql) as Partial<Unit>[])
-    .map(record => new Unit(record))
+  const from = (page! - 1) * pageSize!
+  query = query.range(from, from + pageSize! - 1)
 
-  const { count } = (await worker!.db.query(`
-  select count(*) as count from units ${where}`))[0] as { count: number }
-  pagination.itemCount = count
+  const { data, count } = await query
+
+  units = data!.map(record => new Unit(record))
+  pagination.itemCount = count!
 
   loading = false
 }
-workerStore.$subscribe(() => fetchData(filters, pagination, sort))
-onMounted(async () => {
-  if (workerStore.worker === null || units.length > 0)
-    return
 
-  await fetchData(filters, pagination, sort)
-})
+onMounted(async () => query(filters, pagination, sort))
 
 function onFiltersChange(filters: DataTableFilterState, column: DataTableBaseColumn) {
   console.log('filters changed', filters, column)
@@ -155,7 +172,7 @@ function onSortersChange(sortState: DataTableSortState) {
       sort.value = [sortState]
     }
   }
-  fetchData(filters, pagination, sort)
+  query(filters, pagination, sort)
 }
 </script>
 

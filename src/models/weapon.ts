@@ -1,16 +1,17 @@
+import type { definitions } from 'types/supabase'
+
 export type WeaponType = 1 | 2 | 3
 export type WeaponRangeType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 export type WeaponDamageType = 0 | 1 | 2 | 3
 
-export class Weapon {
+export class Weapon implements definitions.weapons {
   constructor(data: Partial<Weapon>) {
     Object.assign(this, data)
   }
 
   id!: number
-  server_id!: number
   weapon_id!: number
-  unit_id!: number
+  parent_unit_id!: number
   slot!: number
 
   weapon_name!: string
