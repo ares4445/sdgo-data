@@ -28,6 +28,8 @@ const theme = computed(() => isDark.value ? darkTheme : null)
 
 <template>
   <n-config-provider :theme="theme">
-    <RouterView />
+    <n-loading-bar-provider>
+      <RouterView />
+    </n-loading-bar-provider>
   </n-config-provider>
 </template>

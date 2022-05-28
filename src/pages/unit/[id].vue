@@ -1,11 +1,15 @@
 <script setup lang="ts">
 /* eslint-disable no-console */
+import { useLoadingBar } from 'naive-ui';
 import type { definitions } from 'types/supabase'
 import { Unit } from '~/models/unit'
 import { Weapon } from '~/models/weapon'
 import { useSupabase } from '~/stores/supabase'
 
 const props = defineProps<{ id: string }>()
+
+const { supabase } = useSupabase()
+const loading = useLoadingBar()
 
 let units = $ref<Unit[]>([])
 let weapons = $ref<Weapon[]>([])
@@ -26,8 +30,9 @@ const weaponsView = computed(() => {
 })
 const shield_dir_diff = computed(() => units?.[0]?.shield_dir_diff || units?.[1]?.shield_dir_diff)
 
-const { supabase } = useSupabase()
 async function query() {
+  loading.start()
+
   const { data: unitsData } = await supabase.from<definitions['units']>('units')
     .select('*')
     .or(`unit_id.eq.${props.id},parent_unit_id.eq.${props.id}`)
@@ -42,6 +47,8 @@ async function query() {
     .order('parent_unit_id')
     .order('slot')
   weapons = weaponsData!.map(record => new Weapon(record))
+
+  loading.finish()
 }
 
 onMounted(() => query())
